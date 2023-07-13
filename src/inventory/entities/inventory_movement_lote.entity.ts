@@ -9,7 +9,7 @@ export class InventoryMovementLote {
 
   @Column()
   @ManyToOne(() => Lote, (lote) => lote.id)
-  lote_id: number;
+  lote: number;
 
   @Column()
   folio: string;

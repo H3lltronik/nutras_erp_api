@@ -1,5 +1,14 @@
 import { Lote } from '@/src/lote/entities/lote.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { MeasureUnit } from '@/src/measure_unit/entities/measure_unit.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product {
@@ -24,6 +33,11 @@ export class Product {
   @Column()
   deletedAt: Date;
 
-  @OneToOne(() => Lote, (lote) => lote.product_id)
-  lote_id: Lote;
+  @JoinColumn()
+  @OneToMany(() => Lote, (lote) => lote.product)
+  lote: Lote;
+
+  @JoinColumn()
+  @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
+  unit: MeasureUnit;
 }

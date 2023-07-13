@@ -9,11 +9,11 @@ export class Inventory {
 
   @Column()
   @ManyToOne(() => Lote, (lote) => lote.id)
-  lote_id: number;
+  lote: number;
 
   @Column()
   @ManyToOne(() => Warehouse, (warehouse) => warehouse.id)
-  warehouse_id: number;
+  warehouse: number;
 
   @Column()
   quantity: number;

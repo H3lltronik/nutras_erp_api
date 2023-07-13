@@ -29,7 +29,7 @@ export class Lote {
   deletedAt: Date;
 
   @ManyToOne(() => Product, (product) => product.id)
-  product_id: Product;
+  product: Product;
 
   @ManyToOne(() => LoteEntryType, (loteEntryType) => loteEntryType.id)
   lote_entry_type: LoteEntryType;
