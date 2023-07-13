@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProfileModule } from './profile/profile.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -17,7 +18,7 @@ const typeOrm = TypeOrmModule.forRoot({
   autoLoadEntities: true,
 });
 @Module({
-  imports: [AuthModule, UsersModule, typeOrm],
+  imports: [AuthModule, UsersModule, typeOrm, ProfileModule],
   controllers: [AppController],
   providers: [AppService],
 })

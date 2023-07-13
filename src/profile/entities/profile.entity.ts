@@ -1,12 +1,10 @@
-// user entity, using typeorm
-
+import { User } from '@/src/users/entities/user.entity';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
 
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ unique: true, type: 'varchar' })
   name: string;
