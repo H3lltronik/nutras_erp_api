@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class InventoryMovement {
@@ -10,6 +10,13 @@ export class InventoryMovement {
 
   @Column()
   quantity: number;
+
+  // @ManyToOne(() => , (inventoryMovement) => inventoryMovement.id)
+  @Column()
+  ot_id: string;
+
+  @Column({ type: 'text' })
+  reason: string;
 
   @Column()
   from: string;

@@ -1,10 +1,11 @@
 import { Product } from '@/src/product/entities/product.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { LoteEntryType } from './lote_entry_type.entity';
 
 @Entity()
 export class Lote {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   code: string;
@@ -29,4 +30,7 @@ export class Lote {
 
   @ManyToOne(() => Product, (product) => product.id)
   product_id: Product;
+
+  @ManyToOne(() => LoteEntryType, (loteEntryType) => loteEntryType.id)
+  lote_entry_type: LoteEntryType;
 }
