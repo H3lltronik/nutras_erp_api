@@ -1,3 +1,4 @@
+import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Lote } from '@/src/lote/entities/lote.entity';
 import { MeasureUnit } from '@/src/measure_unit/entities/measure_unit.entity';
 import {
@@ -11,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Product {
+export class Product extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -23,15 +24,6 @@ export class Product {
 
   @Column()
   description: string;
-
-  @Column()
-  createdAt: Date;
-
-  @Column()
-  updatedAt: Date;
-
-  @Column()
-  deletedAt: Date;
 
   @JoinColumn()
   @OneToMany(() => Lote, (lote) => lote.product)

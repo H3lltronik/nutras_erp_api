@@ -1,7 +1,8 @@
+import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class InventoryMovement {
+export class InventoryMovement extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -23,13 +24,4 @@ export class InventoryMovement {
 
   @Column()
   to: string;
-
-  @Column()
-  createdAt: Date;
-
-  @Column()
-  updatedAt: Date;
-
-  @Column()
-  deletedAt: Date;
 }

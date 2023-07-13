@@ -1,8 +1,9 @@
+import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { User } from '@/src/users/entities/user.entity';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Profile {
+export class Profile extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -14,13 +15,4 @@ export class Profile {
 
   @OneToOne(() => User, (user) => user.profile)
   user: User;
-
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
-
-  @Column({ nullable: true })
-  deletedAt: Date;
 }

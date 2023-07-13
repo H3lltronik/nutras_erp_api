@@ -1,3 +1,4 @@
+import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Profile } from '@/src/profile/entities/profile.entity';
 import {
   Column,
@@ -8,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends TimestampsEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -21,13 +22,4 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @JoinColumn()
   profile: Profile;
-
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
-
-  @Column({ nullable: true })
-  deletedAt: Date;
 }

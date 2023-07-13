@@ -1,9 +1,10 @@
+import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Lote } from '@/src/lote/entities/lote.entity';
 import { Warehouse } from '@/src/warehouse/entities/warehouse.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Inventory {
+export class Inventory extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -17,13 +18,4 @@ export class Inventory {
 
   @Column()
   quantity: number;
-
-  @Column()
-  createdAt: Date;
-
-  @Column()
-  updatedAt: Date;
-
-  @Column()
-  deletedAt: Date;
 }
