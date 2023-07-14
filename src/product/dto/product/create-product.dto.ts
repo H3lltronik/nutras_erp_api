@@ -11,8 +11,5 @@ export class CreateProductDto {
   description: string;
 
   @IsNotEmpty()
-  lote: string;
-
-  @IsNotEmpty()
   unit: string;
 }

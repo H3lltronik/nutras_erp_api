@@ -14,7 +14,7 @@ import {
 @Entity()
 export class Product extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   code: string;
@@ -27,7 +27,7 @@ export class Product extends TimestampsEntity {
 
   @JoinColumn()
   @OneToMany(() => Lote, (lote) => lote.product)
-  lote: Lote;
+  lote?: Lote;
 
   @JoinColumn()
   @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)

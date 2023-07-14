@@ -10,5 +10,6 @@ const repositories = TypeOrmModule.forFeature([MeasureUnit]);
   controllers: [MeasureUnitController],
   providers: [MeasureUnitService],
   imports: [repositories],
+  exports: [MeasureUnitService],
 })
 export class MeasureUnitModule {}
