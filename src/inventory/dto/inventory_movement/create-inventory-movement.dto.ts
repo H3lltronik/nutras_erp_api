@@ -1,11 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateInventoryDto {
+export class CreateInventoryMovementDto {
   @IsNotEmpty()
   type: string;
 
   @IsNotEmpty()
-  quantity: string;
+  quantity: number;
 
   @IsNotEmpty()
   ot_id: string;

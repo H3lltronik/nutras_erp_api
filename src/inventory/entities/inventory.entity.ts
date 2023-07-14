@@ -6,16 +6,16 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Inventory extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   @ManyToOne(() => Lote, (lote) => lote.id)
-  lote: number;
+  lote: string;
 
   @Column()
   @ManyToOne(() => Warehouse, (warehouse) => warehouse.id)
-  warehouse: number;
+  warehouse: string;
 
   @Column()
-  quantity: number;
+  quantity: string;
 }

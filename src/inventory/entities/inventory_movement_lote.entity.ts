@@ -6,11 +6,11 @@ import { TimestampsEntity } from '@/src/common/timestamps-entity';
 @Entity()
 export class InventoryMovementLote extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   @ManyToOne(() => Lote, (lote) => lote.id)
-  lote: number;
+  lote: string;
 
   @Column()
   folio: string;
@@ -20,5 +20,5 @@ export class InventoryMovementLote extends TimestampsEntity {
     () => InventoryMovement,
     (inventoryMovement) => inventoryMovement.id,
   )
-  inventory_movement: number;
+  inventory_movement: string;
 }

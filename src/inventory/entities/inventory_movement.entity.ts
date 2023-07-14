@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class InventoryMovement extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   type: string;
@@ -13,10 +13,10 @@ export class InventoryMovement extends TimestampsEntity {
   quantity: number;
 
   // @ManyToOne(() => , (inventoryMovement) => inventoryMovement.id)
-  @Column()
+  @Column({ nullable: true })
   ot_id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   reason: string;
 
   @Column()

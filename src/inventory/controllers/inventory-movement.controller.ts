@@ -1,45 +1,47 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { InventoryService } from '../services/inventory.service';
-import { CreateInventoryDto } from '../dto/inventory/create-inventory.dto';
-import { UpdateInventoryDto } from '../dto/inventory/update-inventory.dto';
+import { CreateInventoryMovementDto } from '../dto/inventory_movement/create-inventory-movement.dto';
+import { UpdateInventoryMovementDto } from '../dto/inventory_movement/update-inventory-movement.dto';
+import { InventoryMovementService } from '../services/inventory-movement.service';
 
 @Controller('inventory-movement')
-export class InventoryController {
-  constructor(private readonly inventoryService: InventoryService) {}
+export class InventoryMovementController {
+  constructor(
+    private readonly InventoryMovementService: InventoryMovementService,
+  ) {}
 
   @Post()
-  create(@Body() createInventoryDto: CreateInventoryDto) {
-    return this.inventoryService.create(createInventoryDto);
+  create(@Body() createInventoryMovementDto: CreateInventoryMovementDto) {
+    return this.InventoryMovementService.create(createInventoryMovementDto);
   }
 
   @Get()
   findAll() {
-    return this.inventoryService.findAll();
+    return this.InventoryMovementService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.inventoryService.findOne(+id);
+    return this.InventoryMovementService.findOne(id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateInventoryDto: UpdateInventoryDto,
+    @Body() updateInventoryMovementDto: UpdateInventoryMovementDto,
   ) {
-    return this.inventoryService.update(+id, updateInventoryDto);
+    return this.InventoryMovementService.update(id, updateInventoryMovementDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.inventoryService.remove(+id);
+    return this.InventoryMovementService.remove(id);
   }
 }
