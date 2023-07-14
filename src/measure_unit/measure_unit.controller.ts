@@ -40,6 +40,6 @@ export class MeasureUnitController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.measureUnitService.remove(+id);
+    return this.measureUnitService.remove(id);
   }
 }

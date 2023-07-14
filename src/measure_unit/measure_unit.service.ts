@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMeasureUnitDto } from './dto/create-measure_unit.dto';
 import { UpdateMeasureUnitDto } from './dto/update-measure_unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,18 +17,33 @@ export class MeasureUnitService {
   }
 
   findAll() {
-    return this.measureUnitRepository.find();
+    return this.measureUnitRepository.find({ withDeleted: false });
   }
 
-  findOne(id: string) {
-    return this.measureUnitRepository.findOne({ where: { id } });
+  async findOne(id: string) {
+    const measureUnit = await this.measureUnitRepository.findOne({
+      where: { id },
+      withDeleted: false,
+    });
+
+    if (!measureUnit) {
+      throw new HttpException('Measure unit not found', 404);
+    }
+
+    return measureUnit;
   }
 
-  update(id: string, updateMeasureUnitDto: UpdateMeasureUnitDto) {
-    return this.measureUnitRepository.update(id, updateMeasureUnitDto);
+  async update(id: string, updateMeasureUnitDto: UpdateMeasureUnitDto) {
+    await this.measureUnitRepository.update(id, updateMeasureUnitDto);
+
+    const measureUnit = await this.measureUnitRepository.findOne({
+      where: { id },
+    });
+
+    return measureUnit;
   }
 
-  remove(id: number) {
-    return this.measureUnitRepository.delete(id);
+  remove(id: string) {
+    return this.measureUnitRepository.update(id, { deletedAt: new Date() });
   }
 }

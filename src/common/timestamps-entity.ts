@@ -1,4 +1,4 @@
-import { Column } from 'typeorm';
+import { Column, DeleteDateColumn } from 'typeorm';
 
 export abstract class TimestampsEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
@@ -7,6 +7,6 @@ export abstract class TimestampsEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @Column({ nullable: true })
-  deletedAt: Date;
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }
