@@ -8,6 +8,7 @@ import { LoteModule } from './lote/lote.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { MeasureUnitModule } from './measure_unit/measure_unit.module';
+import { HealthCheckController } from './health-check/health-check.controller';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -32,7 +33,7 @@ const typeOrm = TypeOrmModule.forRoot({
     WarehouseModule,
     MeasureUnitModule,
   ],
-  controllers: [],
+  controllers: [HealthCheckController],
   providers: [],
 })
 export class AppModule {}
