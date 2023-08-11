@@ -1,6 +1,6 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { User } from '@/src/users/entities/user.entity';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Profile extends TimestampsEntity {

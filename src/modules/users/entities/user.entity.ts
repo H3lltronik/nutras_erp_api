@@ -1,5 +1,5 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Profile } from '@/src/profile/entities/profile.entity';
+import { Profile } from '@/src/modules/profile/entities/profile.entity';
 import {
   Column,
   Entity,

@@ -1,6 +1,6 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Lote } from '@/src/lote/entities/lote.entity';
-import { Warehouse } from '@/src/warehouse/entities/warehouse.entity';
+import { Lote } from '@/src/modules/lote/entities/lote.entity';
+import { Warehouse } from '@/src/modules/warehouse/entities/warehouse.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

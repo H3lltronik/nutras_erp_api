@@ -1,13 +1,12 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Lote } from '@/src/lote/entities/lote.entity';
-import { MeasureUnit } from '@/src/measure_unit/entities/measure_unit.entity';
+import { Lote } from '@/src/modules/lote/entities/lote.entity';
+import { MeasureUnit } from '@/src/modules/measure_unit/entities/measure_unit.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -19,7 +18,7 @@ export class Product extends TimestampsEntity {
   @Column()
   code: string;
 
-  @Column()
+  @Column({ nullable: true })
   type: string;
 
   @Column()

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProfileModule } from './profile/profile.module';
-import { ProductModule } from './product/product.module';
-import { LoteModule } from './lote/lote.module';
-import { InventoryModule } from './inventory/inventory.module';
-import { WarehouseModule } from './warehouse/warehouse.module';
-import { MeasureUnitModule } from './measure_unit/measure_unit.module';
-import { HealthCheckController } from './health-check/health-check.controller';
+import { AuthModule } from './modules/auth/auth.module';
+import { HealthCheckController } from './modules/health-check/health-check.controller';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { LoteModule } from './modules/lote/lote.module';
+import { MeasureUnitModule } from './modules/measure_unit/measure_unit.module';
+import { ProductModule } from './modules/product/product.module';
+import { ProfileModule } from './modules/profile/profile.module';
+import { UsersModule } from './modules/users/users.module';
+import { WarehouseModule } from './modules/warehouse/warehouse.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',

@@ -1,10 +1,10 @@
+import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.service';
 import { HttpException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/product/create-product.dto';
 import { UpdateProductDto } from '../dto/product/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
-import { Repository } from 'typeorm';
-import { MeasureUnitService } from '@/src/measure_unit/measure_unit.service';
 
 @Injectable()
 export class ProductService {

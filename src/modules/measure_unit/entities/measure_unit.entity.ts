@@ -1,5 +1,4 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Product } from '@/src/product/entities/product.entity';
 import {
   Column,
   Entity,
@@ -7,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Product } from '../../product/entities/product.entity';
 
 @Entity()
 export class MeasureUnit extends TimestampsEntity {
