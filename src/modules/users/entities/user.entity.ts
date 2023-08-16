@@ -4,13 +4,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
 export class User extends TimestampsEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true, type: 'varchar' })
@@ -19,7 +19,10 @@ export class User extends TimestampsEntity {
   @Column({ type: 'text' })
   password: string;
 
-  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
-  @JoinColumn()
+  @ManyToOne(() => Profile, (profile) => profile.users, { cascade: true })
+  @JoinColumn({ name: 'profileId' })
   profile: Profile;
+
+  @Column({ type: 'uuid', nullable: true })
+  profileId: string;
 }

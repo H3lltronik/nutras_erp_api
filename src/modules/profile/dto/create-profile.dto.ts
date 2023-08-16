@@ -1,11 +1,11 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProfileDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
   roles: string[];
 }

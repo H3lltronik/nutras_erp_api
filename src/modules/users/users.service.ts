@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { encryptPassword } from '@/src/common/utils/password';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
 import { CreateUserDto } from './dtos/create.dto';
@@ -19,18 +19,28 @@ export class UsersService {
 
     const user = new User();
     user.username = createUserDto.username;
-    user.password = await bcrypt.hash(createUserDto.password, 10);
+    user.password = await encryptPassword(createUserDto.password);
     user.profile = profile;
 
-    return this.userRepository.save(user);
+    try {
+      return await this.userRepository.save(user);
+    } catch (error) {
+      console.log(error);
+      if (error.code === '23505')
+        throw new HttpException('Username already exists', HttpStatus.CONFLICT);
+    }
   }
 
   async findAll() {
-    // Implementation here
+    return this.userRepository.find();
   }
 
   async findOne(id: string) {
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  async findOneByUsername(username: string) {
+    return this.userRepository.findOne({ where: { username } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
