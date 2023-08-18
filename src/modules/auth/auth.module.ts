@@ -12,7 +12,7 @@ config();
 const JWTModule = JwtModule.register({
   global: true,
   secret: process.env.JWT_SECRET,
-  signOptions: { expiresIn: process.env.JWT_EXPIRTAION },
+  signOptions: { expiresIn: process.env.JWT_EXPIRATION },
 });
 
 @Module({

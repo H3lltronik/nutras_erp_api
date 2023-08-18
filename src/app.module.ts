@@ -13,11 +13,11 @@ import { WarehouseModule } from './modules/warehouse/warehouse.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
-  host: 'database', // coming from docker-compose.yml
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'postgres',
+  host: process.env.DB_HOST, // coming from docker-compose.yml
+  port: Number(process.env.DB_PORT ?? 5432),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   entities: ['dist/**/*.entity{.ts,.js}'],
   synchronize: true,
   autoLoadEntities: true,
