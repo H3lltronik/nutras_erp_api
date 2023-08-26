@@ -45,10 +45,20 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.findOne({where: {id}, relations: ['profile']});
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['profile'],
+    });
 
-    console.log(updateUserDto.newPassword, updateUserDto.confirmPassword, user.password)
-    const validPass = await comparePassword(updateUserDto.confirmPassword, user.password);
+    console.log(
+      updateUserDto.newPassword,
+      updateUserDto.confirmPassword,
+      user.password,
+    );
+    const validPass = await comparePassword(
+      updateUserDto.confirmPassword,
+      user.password,
+    );
     if (!validPass)
       throw new HttpException(
         'Old Password and Confirm Password do not match',
@@ -74,6 +84,6 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    // Implementation here
+    return this.userRepository.delete(id);
   }
 }
