@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
 import { CreateUserDto } from './dtos/create.dto';
+import { GetUsersFilterDto } from './dtos/get-users.dto';
 import { UpdateUserDto } from './dtos/update.dto';
 import { User } from './entities/user.entity';
 
@@ -31,8 +32,39 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return this.userRepository.find();
+  async findAll(filterDto: GetUsersFilterDto) {
+    const { username, limit, offset } = filterDto;
+
+    const query = this.userRepository.createQueryBuilder('user');
+
+    if (username) {
+      query.andWhere('user.username LIKE :username', {
+        username: `%${username}%`,
+      });
+    }
+
+    const totalItems = await query.getCount();
+
+    if (limit) {
+      query.limit(limit);
+    }
+
+    if (offset) {
+      query.offset(offset);
+    }
+
+    const items = await query.getMany();
+
+    const totalPages = Math.ceil(totalItems / (limit || totalItems)); // Avoid division by zero
+
+    const paginationMetadata = {
+      totalItems,
+      itemsPerPage: items.length,
+      totalPages,
+      currentPage: offset ? Math.floor(offset / (limit || totalItems)) + 1 : 1,
+    };
+
+    return { items, paginationMetadata };
   }
 
   async findOne(id: string) {
@@ -84,6 +116,8 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    return this.userRepository.delete(id);
+    const user = await this.userRepository.findOneBy({ id });
+    user.deletedAt = new Date();
+    return this.userRepository.save(user);
   }
 }

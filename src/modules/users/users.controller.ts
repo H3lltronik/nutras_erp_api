@@ -6,8 +6,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create.dto';
+import { GetUsersFilterDto } from './dtos/get-users.dto';
 import { UpdateUserDto } from './dtos/update.dto';
 import { UsersService } from './users.service';
 
@@ -21,8 +23,12 @@ export class UsersController {
   }
 
   @Get()
-  async findAll() {
-    return this.userService.findAll();
+  async findAll(@Query() filterDto: GetUsersFilterDto) {
+    const result = await this.userService.findAll(filterDto);
+    return {
+      data: result.items,
+      pagination: result.paginationMetadata,
+    };
   }
 
   @Get(':id')
