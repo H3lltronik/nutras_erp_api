@@ -4,6 +4,7 @@ import { MeasureUnit } from '@/src/modules/measure_unit/entities/measure_unit.en
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -14,6 +15,10 @@ import {
 export class Product extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Generated('increment')
+  @Column()
+  partidaId: number;
 
   @Column()
   code: string;

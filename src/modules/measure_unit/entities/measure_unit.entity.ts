@@ -2,6 +2,7 @@ import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,6 +13,10 @@ import { Product } from '../../product/entities/product.entity';
 export class MeasureUnit extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Generated('increment')
+  @Column()
+  partidaId: number;
 
   @Column()
   name: string;

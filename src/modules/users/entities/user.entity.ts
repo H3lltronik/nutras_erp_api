@@ -3,6 +3,7 @@ import { Profile } from '@/src/modules/profile/entities/profile.entity';
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +13,10 @@ import {
 export class User extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Generated('increment')
+  @Column()
+  partidaId: number;
 
   @Column({ unique: true, type: 'varchar' })
   username: string;
