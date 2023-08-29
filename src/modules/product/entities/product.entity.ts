@@ -13,6 +13,9 @@ import {
 
 @Entity()
 export class Product extends TimestampsEntity {
+  @Column({ type: 'boolean', default: false })
+  isDraft: boolean;
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,13 +23,16 @@ export class Product extends TimestampsEntity {
   @Column()
   partidaId: number;
 
-  @Column()
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
   code: string;
 
   @Column({ nullable: true })
   type: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @JoinColumn()
@@ -36,4 +42,7 @@ export class Product extends TimestampsEntity {
   @JoinColumn()
   @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
   unit: MeasureUnit;
+
+  @Column({ type: 'uuid', nullable: true })
+  unitId: string;
 }

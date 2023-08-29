@@ -12,6 +12,9 @@ import { Department } from '../../department/entities/department.entity';
 
 @Entity()
 export class User extends TimestampsEntity {
+  @Column({ type: 'boolean', default: false })
+  isDraft: boolean;
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,7 +22,7 @@ export class User extends TimestampsEntity {
   @Column()
   partidaId: number;
 
-  @Column({ unique: true, type: 'varchar' })
+  @Column({ unique: true, type: 'varchar', nullable: true })
   username: string;
 
   @Column({ type: 'text' })
@@ -29,7 +32,6 @@ export class User extends TimestampsEntity {
   @JoinColumn({ name: 'profileId' })
   profile: Profile;
 
-  // many to one to Department
   @ManyToOne(() => Department, (department) => department.users, {
     cascade: true,
   })

@@ -1,10 +1,13 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.service';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { GetUsersFilterDto } from '../../users/dtos/get-users.dto';
 import { CreateProductDto } from '../dto/product/create-product.dto';
 import { UpdateProductDto } from '../dto/product/update-product.dto';
 import { Product } from '../entities/product.entity';
+import { ProductsFiltersHandler } from '../filters/products-filters.handler';
 
 @Injectable()
 export class ProductService {
@@ -25,8 +28,16 @@ export class ProductService {
     });
   }
 
-  findAll() {
-    return this.productRepository.find({ withDeleted: false });
+  async findAll(filterDto: GetUsersFilterDto) {
+    const { limit, offset } = filterDto;
+
+    const query = this.productRepository.createQueryBuilder('product');
+    const filterHandler = new ProductsFiltersHandler();
+
+    filterHandler.applyFilters(query, filterDto);
+
+    const paginator = new Paginator<Product>();
+    return await paginator.paginate(query, limit, offset);
   }
 
   async findOne(id: string) {

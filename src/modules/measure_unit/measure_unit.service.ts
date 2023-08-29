@@ -1,9 +1,12 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateMeasureUnitDto } from './dto/create-measure_unit.dto';
-import { UpdateMeasureUnitDto } from './dto/update-measure_unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MeasureUnit } from './entities/measure_unit.entity';
 import { Repository } from 'typeorm';
+import { CreateMeasureUnitDto } from './dto/create-measure_unit.dto';
+import { GetMeasureUnitFilterDto } from './dto/get-measure_units.dto';
+import { UpdateMeasureUnitDto } from './dto/update-measure_unit.dto';
+import { MeasureUnit } from './entities/measure_unit.entity';
+import { MeasureUnitsFiltersHandler } from './filters/measure_units-filters.handler';
 
 @Injectable()
 export class MeasureUnitService {
@@ -16,8 +19,16 @@ export class MeasureUnitService {
     return await this.measureUnitRepository.save(createMeasureUnitDto);
   }
 
-  findAll() {
-    return this.measureUnitRepository.find({ withDeleted: false });
+  async findAll(filterDto: GetMeasureUnitFilterDto) {
+    const { limit, offset } = filterDto;
+
+    const query = this.measureUnitRepository.createQueryBuilder('measure_unit');
+    const filterHandler = new MeasureUnitsFiltersHandler();
+
+    filterHandler.applyFilters(query, filterDto);
+
+    const paginator = new Paginator<MeasureUnit>();
+    return await paginator.paginate(query, limit, offset);
   }
 
   async findOne(id: string) {

@@ -1,3 +1,4 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { comparePassword, encryptPassword } from '@/src/common/utils/password';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +10,6 @@ import { GetUsersFilterDto } from './dtos/get-users.dto';
 import { UpdateUserDto } from './dtos/update.dto';
 import { User } from './entities/user.entity';
 import { UserFiltersHandler } from './filters/users-filters.handler';
-import { Paginator } from '@/src/common/utils/paginator';
 
 @Injectable()
 export class UsersService {
