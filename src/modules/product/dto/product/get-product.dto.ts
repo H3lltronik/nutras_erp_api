@@ -1,7 +1,11 @@
 // profile.dto.ts
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class GetProductsFilterDto {
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   @IsOptional()
   limit?: number;
 
