@@ -7,6 +7,9 @@ export class GetUsersFilterDto {
   username?: string;
 
   @IsOptional()
+  profileId?: string;
+
+  @IsOptional()
   limit?: number;
 
   @IsOptional()

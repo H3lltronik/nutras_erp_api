@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { DepartmentModule } from './modules/department/department.module';
 import { HealthCheckController } from './modules/health-check/health-check.controller';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { LoteModule } from './modules/lote/lote.module';
@@ -33,6 +34,7 @@ const typeOrm = TypeOrmModule.forRoot({
     InventoryModule,
     WarehouseModule,
     MeasureUnitModule,
+    DepartmentModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

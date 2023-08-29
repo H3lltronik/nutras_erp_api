@@ -5,6 +5,8 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { GetProfilesFilterDto } from './dto/get-profiles.post.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
+import { ProfileFiltersHandler } from './filters/profile-filters.handler';
+import { Paginator } from '@/src/common/utils/paginator';
 
 @Injectable()
 export class ProfileService {
@@ -18,35 +20,13 @@ export class ProfileService {
 
   async findAll(filterDto: GetProfilesFilterDto) {
     const { name, limit, offset } = filterDto;
-
     const query = this.profileRepository.createQueryBuilder('profile');
+    const filterHandler = new ProfileFiltersHandler();
 
-    if (name) {
-      query.andWhere('profile.name LIKE :name', { name: `%${name}%` });
-    }
+    filterHandler.applyFilters(query, filterDto);
 
-    const totalItems = await query.getCount();
-
-    if (limit) {
-      query.limit(limit);
-    }
-
-    if (offset) {
-      query.offset(offset);
-    }
-
-    const items = await query.getMany();
-
-    const totalPages = Math.ceil(totalItems / (limit || totalItems)); // Avoid division by zero
-
-    const paginationMetadata = {
-      totalItems,
-      itemsPerPage: items.length,
-      totalPages,
-      currentPage: offset ? Math.floor(offset / (limit || totalItems)) + 1 : 1,
-    };
-
-    return { items, paginationMetadata };
+    const paginator = new Paginator<Profile>();
+    return await paginator.paginate(query, limit, offset);
   }
 
   async findOne(id: string) {
