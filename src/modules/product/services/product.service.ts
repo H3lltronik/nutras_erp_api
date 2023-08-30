@@ -3,8 +3,8 @@ import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.serv
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GetUsersFilterDto } from '../../users/dtos/get-users.dto';
 import { CreateProductDto } from '../dto/product/create-product.dto';
+import { GetProductsFilterDto } from '../dto/product/get-product.dto';
 import { UpdateProductDto } from '../dto/product/update-product.dto';
 import { Product } from '../entities/product.entity';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
@@ -19,7 +19,7 @@ export class ProductService {
 
   async create(createProductDto: CreateProductDto) {
     const measureUnit = await this.measureUnitService.findOne(
-      createProductDto.unit,
+      createProductDto.unitId,
     );
 
     return await this.productRepository.save({
@@ -28,11 +28,14 @@ export class ProductService {
     });
   }
 
-  async findAll(filterDto: GetUsersFilterDto) {
+  async findAll(filterDto: GetProductsFilterDto) {
+    console.log('findAll start');
     const { limit, offset } = filterDto;
 
     const query = this.productRepository.createQueryBuilder('product');
     const filterHandler = new ProductsFiltersHandler();
+
+    query.leftJoinAndSelect('product.unit', 'measure_units');
 
     filterHandler.applyFilters(query, filterDto);
 
@@ -55,7 +58,7 @@ export class ProductService {
 
   async update(id: string, updateProductDto: UpdateProductDto) {
     const measureUnit = await this.measureUnitService.findOne(
-      updateProductDto.unit,
+      updateProductDto.unitId,
     );
 
     await this.productRepository.update(id, {
