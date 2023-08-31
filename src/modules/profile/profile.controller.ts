@@ -6,8 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
+import { GetProfilesFilterDto } from './dto/get-profiles.post.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
 
@@ -21,8 +23,12 @@ export class ProfileController {
   }
 
   @Get()
-  findAll() {
-    return this.profileService.findAll();
+  async findAll(@Query() filterDto: GetProfilesFilterDto) {
+    const result = await this.profileService.findAll(filterDto);
+    return {
+      data: result.items,
+      pagination: result.paginationMetadata,
+    };
   }
 
   @Get(':id')
@@ -32,7 +38,7 @@ export class ProfileController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(+id, updateProfileDto);
+    return this.profileService.update(id, updateProfileDto);
   }
 
   @Delete(':id')

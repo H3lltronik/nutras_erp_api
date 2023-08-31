@@ -1,15 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { MeasureUnitService } from './measure_unit.service';
+import { GetUsersFilterDto } from '../users/dtos/get-users.dto';
 import { CreateMeasureUnitDto } from './dto/create-measure_unit.dto';
 import { UpdateMeasureUnitDto } from './dto/update-measure_unit.dto';
+import { MeasureUnitService } from './measure_unit.service';
 
 @Controller('measure-unit')
 export class MeasureUnitController {
@@ -21,8 +23,12 @@ export class MeasureUnitController {
   }
 
   @Get()
-  findAll() {
-    return this.measureUnitService.findAll();
+  async findAll(@Query() filterDto: GetUsersFilterDto) {
+    const result = await this.measureUnitService.findAll(filterDto);
+    return {
+      data: result.items,
+      pagination: result.paginationMetadata,
+    };
   }
 
   @Get(':id')

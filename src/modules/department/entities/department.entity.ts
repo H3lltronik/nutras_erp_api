@@ -3,14 +3,13 @@ import {
   Column,
   Entity,
   Generated,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../../product/entities/product.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
-export class MeasureUnit extends TimestampsEntity {
+export class Department extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -18,10 +17,9 @@ export class MeasureUnit extends TimestampsEntity {
   @Column()
   partidaId: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @JoinColumn()
-  @OneToMany(() => Product, (product) => product.id)
-  product: Product;
+  @OneToMany(() => User, (user) => user.department)
+  users: User[];
 }
