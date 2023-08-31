@@ -29,13 +29,13 @@ export class ProductService {
   }
 
   async findAll(filterDto: GetProductsFilterDto) {
-    console.log('findAll start');
     const { limit, offset } = filterDto;
 
     const query = this.productRepository.createQueryBuilder('product');
     const filterHandler = new ProductsFiltersHandler();
 
     query.leftJoinAndSelect('product.unit', 'measure_units');
+    query.orderBy('product.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
 
