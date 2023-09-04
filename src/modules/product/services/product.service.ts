@@ -1,6 +1,6 @@
 import { Paginator } from '@/src/common/utils/paginator';
 import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.service';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/product/create-product.dto';
@@ -50,7 +50,7 @@ export class ProductService {
     });
 
     if (!product) {
-      throw new HttpException('Measure unit not found', 404);
+      throw new HttpException('Measure unit not found', HttpStatus.NOT_FOUND);
     }
 
     return product;
@@ -64,7 +64,7 @@ export class ProductService {
     if (product.isPublished && updateProductDto.isDraft) {
       throw new HttpException(
         'This product is already processed and cannot be edited',
-        400,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

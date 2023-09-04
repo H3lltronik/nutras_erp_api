@@ -1,3 +1,4 @@
+import { IDraftEntity } from '@/src/common/draft-entity';
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Profile } from '@/src/modules/profile/entities/profile.entity';
 import {
@@ -11,9 +12,12 @@ import {
 import { Department } from '../../department/entities/department.entity';
 
 @Entity()
-export class User extends TimestampsEntity {
+export class User extends TimestampsEntity implements IDraftEntity {
   @Column({ type: 'boolean', default: false })
   isDraft: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  isPublished: boolean;
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,6 +28,9 @@ export class User extends TimestampsEntity {
 
   @Column({ unique: true, type: 'varchar', nullable: true })
   username: string;
+
+  @Column({ unique: true, type: 'varchar', nullable: true })
+  name: string;
 
   @Column({ type: 'text' })
   password: string;
