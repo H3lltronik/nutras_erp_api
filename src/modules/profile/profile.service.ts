@@ -23,6 +23,8 @@ export class ProfileService {
     const query = this.profileRepository.createQueryBuilder('profile');
     const filterHandler = new ProfileFiltersHandler();
 
+    query.orderBy('profile.partidaId', 'DESC');
+
     filterHandler.applyFilters(query, filterDto);
 
     const paginator = new Paginator<Profile>();

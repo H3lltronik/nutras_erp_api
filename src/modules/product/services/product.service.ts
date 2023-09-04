@@ -57,6 +57,17 @@ export class ProductService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
+
+    if (product.isPublished && updateProductDto.isDraft) {
+      throw new HttpException(
+        'This product is already processed and cannot be edited',
+        400,
+      );
+    }
+
     const measureUnit = await this.measureUnitService.findOne(
       updateProductDto.unitId,
     );
@@ -66,14 +77,18 @@ export class ProductService {
       unit: measureUnit,
     });
 
+    return await this.productRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async remove(id: string) {
     const product = await this.productRepository.findOne({
       where: { id },
     });
 
-    return product;
-  }
+    await this.productRepository.update(id, { deletedAt: new Date() });
 
-  remove(id: string) {
-    return this.productRepository.update(id, { deletedAt: new Date() });
+    return product;
   }
 }

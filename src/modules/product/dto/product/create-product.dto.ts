@@ -12,6 +12,10 @@ export class CreateProductDto {
   @IsBoolean()
   isDraft?: boolean;
 
+  @IsOptional()
+  @IsBoolean()
+  isPublished?: boolean;
+
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
   code: string;

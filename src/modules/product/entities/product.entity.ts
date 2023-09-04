@@ -1,3 +1,4 @@
+import { IDraftEntity } from '@/src/common/draft-entity';
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Lote } from '@/src/modules/lote/entities/lote.entity';
 import { MeasureUnit } from '@/src/modules/measure_unit/entities/measure_unit.entity';
@@ -12,9 +13,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Product extends TimestampsEntity {
+export class Product extends TimestampsEntity implements IDraftEntity {
   @Column({ type: 'boolean', default: false })
   isDraft: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  isPublished: boolean;
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

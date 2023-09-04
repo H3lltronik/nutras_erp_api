@@ -46,6 +46,8 @@ export class UsersService {
     const query = this.userRepository.createQueryBuilder('user');
     const filterHandler = new UserFiltersHandler();
 
+    query.orderBy('user.partidaId', 'DESC');
+
     filterHandler.applyFilters(query, filterDto);
 
     query.leftJoinAndSelect('user.profile', 'profile');
