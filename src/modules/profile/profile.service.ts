@@ -1,3 +1,4 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,7 +7,6 @@ import { GetProfilesFilterDto } from './dto/get-profiles.post.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 import { ProfileFiltersHandler } from './filters/profile-filters.handler';
-import { Paginator } from '@/src/common/utils/paginator';
 
 @Injectable()
 export class ProfileService {
@@ -45,8 +45,12 @@ export class ProfileService {
   }
 
   async remove(id: string) {
-    const profile = await this.profileRepository.findOneBy({ id });
-    profile.deletedAt = new Date();
-    return this.profileRepository.save(profile);
+    const profile = await this.profileRepository.findOne({
+      where: { id },
+    });
+
+    await this.profileRepository.update(id, { deletedAt: new Date() });
+
+    return profile;
   }
 }
