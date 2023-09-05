@@ -1,6 +1,6 @@
 import { Paginator } from '@/src/common/utils/paginator';
 import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.service';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/product/create-product.dto';
@@ -50,13 +50,24 @@ export class ProductService {
     });
 
     if (!product) {
-      throw new HttpException('Measure unit not found', 404);
+      throw new HttpException('Measure unit not found', HttpStatus.NOT_FOUND);
     }
 
     return product;
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
+
+    if (product.isPublished && updateProductDto.isDraft) {
+      throw new HttpException(
+        'This product is already processed and cannot be edited',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const measureUnit = await this.measureUnitService.findOne(
       updateProductDto.unitId,
     );
@@ -66,14 +77,18 @@ export class ProductService {
       unit: measureUnit,
     });
 
+    return await this.productRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async remove(id: string) {
     const product = await this.productRepository.findOne({
       where: { id },
     });
 
-    return product;
-  }
+    await this.productRepository.update(id, { deletedAt: new Date() });
 
-  remove(id: string) {
-    return this.productRepository.update(id, { deletedAt: new Date() });
+    return product;
   }
 }

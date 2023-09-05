@@ -1,5 +1,5 @@
 import { Paginator } from '@/src/common/utils/paginator';
-import { comparePassword, encryptPassword } from '@/src/common/utils/password';
+import { encryptPassword } from '@/src/common/utils/password';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,6 +30,9 @@ export class UsersService {
     user.password = await encryptPassword(createUserDto.password);
     user.profile = profile;
     user.department = department;
+    user.name = createUserDto.name;
+    user.isPublished = createUserDto.isPublished;
+    user.isDraft = createUserDto.isDraft;
 
     try {
       return await this.userRepository.save(user);
@@ -45,6 +48,8 @@ export class UsersService {
 
     const query = this.userRepository.createQueryBuilder('user');
     const filterHandler = new UserFiltersHandler();
+
+    query.orderBy('user.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
 
@@ -70,20 +75,23 @@ export class UsersService {
       relations: ['profile'],
     });
 
-    const validPass = await comparePassword(
-      updateUserDto.confirmPassword,
-      user.password,
-    );
-    if (!validPass)
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    if (user.isPublished && updateUserDto.isDraft) {
       throw new HttpException(
-        'Old Password and Confirm Password do not match',
+        'This user is already processed and cannot be edited',
         HttpStatus.BAD_REQUEST,
       );
+    }
 
     const profile = await this.profileService.findOne(updateUserDto.profileId);
 
     user.username = updateUserDto.username;
     user.profile = profile;
+    user.name = updateUserDto.name;
+    user.isPublished = updateUserDto.isPublished;
+    user.isDraft = updateUserDto.isDraft;
+
     if (updateUserDto.newPassword)
       user.password = await encryptPassword(updateUserDto.newPassword);
 
