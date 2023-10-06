@@ -11,6 +11,7 @@ import { ProductModule } from './modules/product/product.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
+import { ProviderModule } from './modules/provider/provider.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -30,6 +31,7 @@ const typeOrm = TypeOrmModule.forRoot({
     typeOrm,
     ProfileModule,
     ProductModule,
+    ProviderModule,
     LoteModule,
     InventoryModule,
     WarehouseModule,

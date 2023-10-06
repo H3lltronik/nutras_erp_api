@@ -35,6 +35,10 @@ export class ProductService {
     const filterHandler = new ProductsFiltersHandler();
 
     query.leftJoinAndSelect('product.unit', 'measure_units');
+    query.leftJoinAndSelect('product.kosherDetails', 'kosher_details');
+    query.leftJoinAndSelect('product.purchaseData', 'purchase_data');
+    query.leftJoinAndSelect('product.productionData', 'production_data');
+    query.leftJoinAndSelect('product.provider', 'providers');
     query.orderBy('product.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
@@ -47,6 +51,13 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id },
       withDeleted: false,
+      relations: [
+        'unit',
+        'kosherDetails',
+        'purchaseData',
+        'productionData',
+        'provider',
+      ],
     });
 
     if (!product) {

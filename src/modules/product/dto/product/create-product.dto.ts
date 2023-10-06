@@ -1,11 +1,14 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
-  IsString,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+import { CreatePurchaseDataDto } from '../comprasData/create-compras-data.dto';
+import { CreateKosherDetailsDto } from '../kosherDetails/create-kosher-data.dto';
+import { CreateProductionDataDto } from '../productionData/create-production-data.dto';
 
 export class CreateProductDto {
   @IsOptional()
@@ -18,7 +21,23 @@ export class CreateProductDto {
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
+  profileId: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
   code: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  productTypeId: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  commonName: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  providerId: string;
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
@@ -26,53 +45,28 @@ export class CreateProductDto {
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
-  commonName: string;
+  isKosher: boolean;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  vendorDescription: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  provider: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  codeAlt: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
+  @IsNotEmpty()
   presentation: string;
 
-  @ValidateIf((o) => !o.isDraft)
-  @IsNumber()
-  quantity: number;
+  @ValidateIf(
+    (o) => !o.isDraft && o.profileId === 'Compras department profile ID',
+  )
+  @ValidateNested()
+  @Type(() => CreatePurchaseDataDto)
+  purchaseData: CreatePurchaseDataDto;
 
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  allergen: string;
+  @ValidateIf(
+    (o) => !o.isDraft && o.profileId === 'Produccion department profile ID',
+  )
+  @ValidateNested()
+  @Type(() => CreateProductionDataDto)
+  productionData: CreateProductionDataDto;
 
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  status: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  kosherAgency: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  companyIngredientName: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  certificateName: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  vendor: string;
-
-  @ValidateIf((o) => !o.isDraft)
-  @IsString()
-  note: string;
+  @ValidateIf((o) => !o.isDraft && o.isKosher)
+  @ValidateNested()
+  @Type(() => CreateKosherDetailsDto)
+  kosherDetails: CreateKosherDetailsDto;
 }
