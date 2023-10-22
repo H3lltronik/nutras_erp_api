@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { GetProductTypesFilterDto } from '../dto/productType/get-product-types.dto';
 import { ProductsTypeService } from '../services/product-type.service';
 
 @Controller('product-types')
 export class ProductTypesController {
-  constructor(private readonly productService: ProductsTypeService) {}
+  constructor(private readonly productTypesService: ProductsTypeService) {}
 
   // @Post()
   // create(@Body() createProductDto: CreateProductDto) {
@@ -11,8 +12,12 @@ export class ProductTypesController {
   // }
 
   @Get()
-  async findAll() {
-    return await this.productService.findAll();
+  async findAll(@Query() filterDto: GetProductTypesFilterDto) {
+    const result = await this.productTypesService.findAll(filterDto);
+    return {
+      data: result.items,
+      pagination: result.paginationMetadata,
+    };
   }
 
   // @Patch(':id')

@@ -7,22 +7,22 @@ export class KosherDetails extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   agency: string;
 
-  @Column()
+  @Column({ nullable: true })
   certifiedCompany: string;
 
-  @Column()
+  @Column({ nullable: true })
   nameOnCertificate: string;
 
-  @Column()
+  @Column({ nullable: true })
   kidOrUkd: string;
 
-  @Column()
+  @Column({ nullable: true })
   certificatePageNumber: number;
 
-  @Column()
+  @Column({ nullable: true })
   certificateValidity: Date;
 
   @OneToOne(() => Product, (product) => product.kosherDetails)

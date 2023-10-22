@@ -1,5 +1,13 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Generated,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Department } from '../../department/entities/department.entity';
 
 @Entity()
 export class ProductType extends TimestampsEntity {
@@ -12,4 +20,11 @@ export class ProductType extends TimestampsEntity {
 
   @Column()
   name: string;
+
+  @Column({ nullable: true })
+  departmentId: string;
+
+  @JoinColumn()
+  @ManyToOne(() => Department, (department) => department.id)
+  department: Department;
 }

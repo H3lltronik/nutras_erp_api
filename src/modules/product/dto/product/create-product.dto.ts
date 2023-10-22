@@ -69,4 +69,8 @@ export class CreateProductDto {
   @ValidateNested()
   @Type(() => CreateKosherDetailsDto)
   kosherDetails: CreateKosherDetailsDto;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  departmentId: string;
 }

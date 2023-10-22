@@ -6,6 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProductType } from '../../product/entities/product-type.entity';
+import { Product } from '../../product/entities/product.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -22,4 +24,10 @@ export class Department extends TimestampsEntity {
 
   @OneToMany(() => User, (user) => user.department)
   users: User[];
+
+  @OneToMany(() => Product, (product) => product.department)
+  products: Product[];
+
+  @OneToMany(() => ProductType, (product) => product.department)
+  productTypes: ProductType[];
 }

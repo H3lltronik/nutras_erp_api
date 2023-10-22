@@ -12,6 +12,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Department } from '../../department/entities/department.entity';
 import { Provider } from '../../provider/entities/provider.entity';
 import { KosherDetails } from './kosher-details.entity';
 import { ProductType } from './product-type.entity';
@@ -90,4 +91,11 @@ export class Product extends TimestampsEntity implements IDraftEntity {
     cascade: true,
   })
   productionData: ProductionData;
+
+  @Column({ nullable: true })
+  departmentId: string;
+
+  @JoinColumn()
+  @ManyToOne(() => Department, (department) => department.id)
+  department: Department;
 }

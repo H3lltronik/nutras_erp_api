@@ -28,6 +28,33 @@ export class ProductService {
     });
   }
 
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
+
+    if (product.isPublished && updateProductDto.isDraft) {
+      throw new HttpException(
+        'This product is already processed and cannot be edited',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const measureUnit = await this.measureUnitService.findOne(
+      updateProductDto.unitId,
+    );
+
+    updateProductDto.profileId = undefined;
+    await this.productRepository.update(id, {
+      ...updateProductDto,
+      unit: measureUnit,
+    });
+
+    return await this.productRepository.findOne({
+      where: { id },
+    });
+  }
+
   async findAll(filterDto: GetProductsFilterDto) {
     const { limit, offset } = filterDto;
 
@@ -39,6 +66,7 @@ export class ProductService {
     query.leftJoinAndSelect('product.purchaseData', 'purchase_data');
     query.leftJoinAndSelect('product.productionData', 'production_data');
     query.leftJoinAndSelect('product.provider', 'providers');
+    query.leftJoinAndSelect('product.department', 'department');
     query.orderBy('product.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
@@ -65,32 +93,6 @@ export class ProductService {
     }
 
     return product;
-  }
-
-  async update(id: string, updateProductDto: UpdateProductDto) {
-    const product = await this.productRepository.findOne({
-      where: { id },
-    });
-
-    if (product.isPublished && updateProductDto.isDraft) {
-      throw new HttpException(
-        'This product is already processed and cannot be edited',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const measureUnit = await this.measureUnitService.findOne(
-      updateProductDto.unitId,
-    );
-
-    await this.productRepository.update(id, {
-      ...updateProductDto,
-      unit: measureUnit,
-    });
-
-    return await this.productRepository.findOne({
-      where: { id },
-    });
   }
 
   async remove(id: string) {
