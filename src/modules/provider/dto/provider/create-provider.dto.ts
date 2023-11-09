@@ -15,5 +15,33 @@ export class CreateProviderDto {
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
-  description: string;
+  businessName: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  service: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  phone: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  email: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  paymentEmail: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  bank: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  clabeAccount: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  accountNumber: string;
 }

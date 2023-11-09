@@ -21,5 +21,26 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
   name: string;
 
   @Column({ nullable: true })
-  description: string;
+  businessName: string;
+
+  @Column({ nullable: true })
+  service: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  email: string;
+
+  @Column({ nullable: true })
+  paymentEmail: string;
+
+  @Column({ nullable: true })
+  bank: string;
+
+  @Column({ nullable: true })
+  clabeAccount: string;
+
+  @Column({ nullable: true })
+  accountNumber: string;
 }
