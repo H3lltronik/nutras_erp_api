@@ -22,7 +22,7 @@ export class ProviderService {
   }
 
   async findAll(filterDto: GetProvidersFilterDto) {
-    const { limit, offset } = filterDto;
+    const { limit, offset, withDeleted } = filterDto;
 
     const query = this.providerRepository.createQueryBuilder('provider');
     const filterHandler = new ProvidersFiltersHandler();
@@ -30,6 +30,7 @@ export class ProviderService {
     query.orderBy('provider.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
+    if (withDeleted === 'true') query.withDeleted();
 
     const paginator = new Paginator<Provider>();
     return await paginator.paginate(query, limit, offset);

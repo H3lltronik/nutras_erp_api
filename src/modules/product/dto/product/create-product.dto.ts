@@ -35,7 +35,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   commonName: string;
 
-  @ValidateIf((o) => !o.isDraft)
+  @ValidateIf(
+    (o) => !o.isDraft && o.departmentId === process.env.PURCHASES_DEPARTMENT_ID,
+  )
   @IsNotEmpty()
   providerId: string;
 
@@ -43,7 +45,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   unitId: string;
 
-  @ValidateIf((o) => !o.isDraft)
+  @ValidateIf(
+    (o) => !o.isDraft && o.departmentId === process.env.PURCHASES_DEPARTMENT_ID,
+  )
   @IsNotEmpty()
   isKosher: boolean;
 
@@ -52,14 +56,15 @@ export class CreateProductDto {
   presentation: string;
 
   @ValidateIf(
-    (o) => !o.isDraft && o.profileId === 'Compras department profile ID',
+    (o) => !o.isDraft && o.departmentId === process.env.PURCHASES_DEPARTMENT_ID,
   )
   @ValidateNested()
   @Type(() => CreatePurchaseDataDto)
   purchaseData: CreatePurchaseDataDto;
 
   @ValidateIf(
-    (o) => !o.isDraft && o.profileId === 'Produccion department profile ID',
+    (o) =>
+      !o.isDraft && o.departmentId === process.env.PRODUCTION_DEPARTMENT_ID,
   )
   @ValidateNested()
   @Type(() => CreateProductionDataDto)

@@ -1,14 +1,16 @@
 // profile.dto.ts
+import {
+  PaginationFilterMixin,
+  SoftDeleteMixin,
+} from '@/src/common/dto/pagination-base.dto';
 import { IsOptional, IsString } from 'class-validator';
 
-export class GetProfilesFilterDto {
+class GetProfilesFilterFields {
   @IsOptional()
   @IsString()
   name?: string;
-
-  @IsOptional()
-  limit?: number;
-
-  @IsOptional()
-  offset?: number;
 }
+
+export class GetProfilesFilterDto extends SoftDeleteMixin(
+  PaginationFilterMixin(GetProfilesFilterFields),
+) {}

@@ -1,19 +1,17 @@
 // profile.dto.ts
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import {
+  DraftModeMixin,
+  PaginationFilterMixin,
+  SoftDeleteMixin,
+} from '@/src/common/dto/pagination-base.dto';
+import { IsOptional, IsString } from 'class-validator';
 
-export class GetProductsFilterDto {
+class GetProductsFilterFields {
   @IsOptional()
   @IsString()
   search?: string;
-
-  @IsOptional()
-  @IsString()
-  @IsIn(['true', 'false'])
-  draftMode?: string;
-
-  @IsOptional()
-  limit?: number;
-
-  @IsOptional()
-  offset?: number;
 }
+
+export class GetProductsFilterDto extends SoftDeleteMixin(
+  PaginationFilterMixin(DraftModeMixin(GetProductsFilterFields)),
+) {}
