@@ -9,8 +9,15 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Department } from '../../department/entities/department.entity';
+import { Provider } from '../../provider/entities/provider.entity';
+import { KosherDetails } from './kosher-details.entity';
+import { ProductType } from './product-type.entity';
+import { ProductionData } from './production-product-data.entity';
+import { PurchaseData } from './purchase-product-data.entity';
 
 @Entity()
 export class Product extends TimestampsEntity implements IDraftEntity {
@@ -27,70 +34,68 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @Column()
   partidaId: number;
 
-  // Represents a unique identifier or code for an item or entity.
+  @Column({ nullable: true })
+  productTypeId: string;
+
+  @JoinColumn()
+  @ManyToOne(() => ProductType, (productType) => productType.id)
+  productType: ProductType;
+
   @Column({ nullable: true })
   code: string;
 
-  // Common or widely accepted name for the item.
   @Column({ nullable: true })
   commonName: string;
 
-  // Detailed description provided by the vendor or supplier.
   @Column({ nullable: true })
-  vendorDescription: string;
+  providerId: string;
 
-  // Entity or person supplying the item or service.
-  @Column({ nullable: true })
-  provider: string;
+  @JoinColumn()
+  @ManyToOne(() => Provider, (provider) => provider.id)
+  provider: Provider;
 
-  // Same as 'code', may represent another unique identifier if used in context.
-  @Column({ nullable: true })
-  codeAlt: string; // Changed to 'codeAlt' to differentiate from the first 'code'
+  @Column({ type: 'uuid', nullable: true })
+  unitId: string;
 
-  // The manner in which an item is displayed or packaged.
   @Column({ nullable: true })
   presentation: string;
 
-  // Amount or number of items.
   @Column({ nullable: true })
-  quantity: number;
+  quantityPerUnit: string;
 
-  // Potential allergenic ingredient or substance in the item.
-  @Column({ nullable: true })
-  allergen: string;
+  @JoinColumn()
+  @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
+  unit: MeasureUnit;
 
-  // Current condition or phase of the item (e.g., active, inactive).
   @Column({ nullable: true })
-  status: string;
+  isKosher: boolean;
 
-  // Agency or authority responsible for kosher certification.
-  @Column({ nullable: true })
-  kosherAgency: string;
-
-  // Official name of the ingredient as provided by the company.
-  @Column({ nullable: true })
-  companyIngredientName: string;
-
-  // Name or title of the certificate or certification.
-  @Column({ nullable: true })
-  certificateName: string;
-
-  // Alternate term for a supplier or provider.
-  @Column({ nullable: true })
-  vendor: string;
-
-  // Additional information or remarks about the item.
-  @Column({ nullable: true })
-  note: string;
+  @JoinColumn()
+  @OneToOne(() => KosherDetails, (kosherDetails) => kosherDetails.product, {
+    cascade: true,
+  })
+  kosherDetails?: KosherDetails;
 
   @JoinColumn()
   @OneToMany(() => Lote, (lote) => lote.product)
   lote?: Lote;
 
   @JoinColumn()
-  @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
-  unit: MeasureUnit;
+  @OneToOne(() => PurchaseData, (purchaseData) => purchaseData.product, {
+    cascade: true,
+  })
+  purchaseData: PurchaseData;
 
-  @Column({ type: 'uuid', nullable: true })
-  unitId: string;
+  @JoinColumn()
+  @OneToOne(() => ProductionData, (productionData) => productionData.product, {
+    cascade: true,
+  })
+  productionData: ProductionData;
+
+  @Column({ nullable: true })
+  departmentId: string;
+
+  @JoinColumn()
+  @ManyToOne(() => Department, (department) => department.id)
+  department: Department;
 }

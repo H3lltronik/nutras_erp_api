@@ -19,13 +19,14 @@ export class ProfileService {
   }
 
   async findAll(filterDto: GetProfilesFilterDto) {
-    const { name, limit, offset } = filterDto;
+    const { withDeleted, limit, offset } = filterDto;
     const query = this.profileRepository.createQueryBuilder('profile');
     const filterHandler = new ProfileFiltersHandler();
 
     query.orderBy('profile.partidaId', 'DESC');
 
     filterHandler.applyFilters(query, filterDto);
+    if (withDeleted === 'true') query.withDeleted();
 
     const paginator = new Paginator<Profile>();
     return await paginator.paginate(query, limit, offset);
@@ -48,6 +49,7 @@ export class ProfileService {
     const profile = await this.profileRepository.findOne({
       where: { id },
     });
+    console.log('profile', profile, id);
 
     await this.profileRepository.update(id, { deletedAt: new Date() });
 

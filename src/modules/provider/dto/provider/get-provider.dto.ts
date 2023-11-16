@@ -6,12 +6,12 @@ import {
 } from '@/src/common/dto/pagination-base.dto';
 import { IsOptional, IsString } from 'class-validator';
 
-class GetProductsFilterFields {
+class GetProvidersFilterFields {
   @IsOptional()
   @IsString()
   search?: string;
 }
 
-export class GetProductsFilterDto extends SoftDeleteMixin(
-  PaginationFilterMixin(DraftModeMixin(GetProductsFilterFields)),
+export class GetProvidersFilterDto extends SoftDeleteMixin(
+  PaginationFilterMixin(DraftModeMixin(GetProvidersFilterFields)),
 ) {}

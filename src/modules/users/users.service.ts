@@ -61,8 +61,10 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    console.log(id);
-    return this.userRepository.findOne({ where: { id } });
+    return this.userRepository.findOne({
+      where: { id },
+      relations: ['profile'],
+    });
   }
 
   async findOneByUsername(username: string) {
