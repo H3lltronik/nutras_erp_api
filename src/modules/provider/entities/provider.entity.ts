@@ -27,6 +27,9 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
   service: string;
 
   @Column({ nullable: true })
+  lada: string;
+
+  @Column({ nullable: true })
   phone: string;
 
   @Column({ nullable: true })

@@ -23,6 +23,10 @@ export class CreateProviderDto {
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
+  lada: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
   phone: string;
 
   @ValidateIf((o) => !o.isDraft)
