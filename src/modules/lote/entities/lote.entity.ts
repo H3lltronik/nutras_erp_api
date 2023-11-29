@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { LoteEntryType } from './lote_entry_type.entity';
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
+import { LoteEntryType } from './lote_entry_type.entity';
 
 @Entity()
 export class Lote extends TimestampsEntity {

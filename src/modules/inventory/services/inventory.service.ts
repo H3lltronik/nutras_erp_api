@@ -1,53 +1,94 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { CreateInventoryDto } from '../dto/inventory/create-inventory.dto';
-import { UpdateInventoryDto } from '../dto/inventory/update-inventory.dto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Inventory } from '../entities/inventory.entity';
+import { GetInventoryFilterDto } from '../dto/inventory/get-inventory.dto';
+import { InventoryMovement } from '../entities/inventory_movement.entity';
 
 @Injectable()
 export class InventoryService {
   constructor(
-    @InjectRepository(Inventory)
-    private inventoryRepository: Repository<Inventory>,
+    @InjectRepository(InventoryMovement)
+    private inventoryMovementsRepository: Repository<InventoryMovement>,
   ) {}
 
-  async create(createInventoryDto: CreateInventoryDto) {
-    return await this.inventoryRepository.save(createInventoryDto);
-  }
+  async findAll(getInventoryFilterDto: GetInventoryFilterDto) {
+    const { productId, toId, fromId } = getInventoryFilterDto;
+    if (!productId) throw new Error('Product id is required');
 
-  findAll() {
-    return this.inventoryRepository.find({
-      withDeleted: false,
-      relations: ['lote', 'warehouse'],
-    });
-  }
-
-  async findOne(id: string) {
-    const inventory = await this.inventoryRepository.findOne({
-      where: { id },
-      withDeleted: false,
-      relations: ['lote', 'warehouse'],
+    const inventoryMovements = await this.inventoryMovementsRepository.find({
+      relations: [
+        'toWarehouse',
+        'fromWarehouse',
+        'inventoryMovementLotes',
+        'inventoryMovementLotes.lote',
+        'inventoryMovementLotes.lote.product',
+      ],
     });
 
-    if (!inventory) {
-      throw new HttpException('Inventory unit not found', 404);
+    const inventoryMap: { [key: string]: { [key: string]: number } } = {};
+
+    for (const inventoryMovement of inventoryMovements) {
+      for (const inventoryMovementLote of inventoryMovement.inventoryMovementLotes) {
+        if (inventoryMovementLote.lote.product.id === productId) {
+          const warehouseToId = inventoryMovement.toWarehouse?.id;
+          const warehouseFromId = inventoryMovement.fromWarehouse?.id;
+          const productQuantity = inventoryMovementLote.quantity;
+
+          // Handle Entry to Warehouse
+          if (warehouseToId) {
+            if (!inventoryMap[warehouseToId]) {
+              inventoryMap[warehouseToId] = {};
+            }
+            if (!inventoryMap[warehouseToId][productId]) {
+              inventoryMap[warehouseToId][productId] = 0;
+            }
+            inventoryMap[warehouseToId][productId] += productQuantity;
+          }
+
+          // Handle Exit from Warehouse
+          if (warehouseFromId) {
+            if (!inventoryMap[warehouseFromId]) {
+              inventoryMap[warehouseFromId] = {};
+            }
+            if (!inventoryMap[warehouseFromId][productId]) {
+              inventoryMap[warehouseFromId][productId] = 0;
+            }
+            inventoryMap[warehouseFromId][productId] -= productQuantity;
+          }
+        }
+      }
     }
 
-    return inventory;
+    // Convert inventoryMap to desired output format
+    const inventoryArray: any[] = [];
+    for (const warehouseId in inventoryMap) {
+      for (const prodId in inventoryMap[warehouseId]) {
+        if (inventoryMap[warehouseId][prodId] < 0) {
+          continue;
+        }
+
+        inventoryArray.push({
+          warehouseId: warehouseId,
+          warehouseName: inventoryMovements.find(
+            (inventoryMovement) =>
+              inventoryMovement.toWarehouse?.id === warehouseId,
+          )?.toWarehouse?.name,
+          productId: prodId,
+          productName: inventoryMovements.find((inventoryMovement) =>
+            inventoryMovement.inventoryMovementLotes.find(
+              (inventoryMovementLote) =>
+                inventoryMovementLote.lote.product.id === prodId,
+            ),
+          )?.inventoryMovementLotes?.[0]?.lote?.product?.commonName,
+          quantity: inventoryMap[warehouseId][prodId],
+        });
+      }
+    }
+
+    return inventoryArray;
   }
 
-  async update(id: string, updateInventoryDto: UpdateInventoryDto) {
-    await this.inventoryRepository.update(id, updateInventoryDto);
-
-    const inventory = await this.inventoryRepository.findOne({
-      where: { id },
-    });
-
-    return inventory;
-  }
-
-  remove(id: string) {
-    return this.inventoryRepository.update(id, { deletedAt: new Date() });
+  async find(id: string) {
+    return null;
   }
 }

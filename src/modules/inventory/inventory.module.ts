@@ -1,18 +1,17 @@
+import { IsEntityExistConstraint } from '@/src/common/decorators/dto/is_entity_exists/is_entity_exists.constraint';
 import { Module } from '@nestjs/common';
-import { InventoryService } from './services/inventory.service';
-import { InventoryController } from './controllers/inventory.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryMovement } from './entities/inventory_movement.entity';
-import { Inventory } from './entities/inventory.entity';
 import { InventoryMovementLoteController } from './controllers/inventory-movement-lote.controller';
 import { InventoryMovementController } from './controllers/inventory-movement.controller';
+import { InventoryController } from './controllers/inventory.controller';
+import { InventoryMovement } from './entities/inventory_movement.entity';
+import { InventoryMovementLote } from './entities/inventory_movement_lote.entity';
 import { InventoryMovementLoteService } from './services/inventory-movement-lote.service';
 import { InventoryMovementService } from './services/inventory-movement.service';
-import { InventoryMovementLote } from './entities/inventory_movement_lote.entity';
+import { InventoryService } from './services/inventory.service';
 
 const repositories = TypeOrmModule.forFeature([
   InventoryMovement,
-  Inventory,
   InventoryMovementLote,
 ]);
 
@@ -26,6 +25,7 @@ const repositories = TypeOrmModule.forFeature([
     InventoryService,
     InventoryMovementService,
     InventoryMovementLoteService,
+    IsEntityExistConstraint,
   ],
   imports: [repositories],
 })

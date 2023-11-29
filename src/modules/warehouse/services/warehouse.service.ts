@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateWarehouseDto } from '../dto/warehouse/create-warehouse.dto';
-import { UpdateWarehouseDto } from '../dto/warehouse/update-warehouse.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateWarehouseDto } from '../dto/warehouse/create-warehouse.dto';
+import { UpdateWarehouseDto } from '../dto/warehouse/update-warehouse.dto';
 import { Warehouse } from '../entities/warehouse.entity';
 
 @Injectable()
@@ -17,7 +17,10 @@ export class WarehouseService {
   }
 
   findAll() {
-    return this.warehouseRepository.find({ withDeleted: false });
+    return this.warehouseRepository.find({
+      withDeleted: false,
+      relations: ['fromInventoryMovements', 'toInventoryMovements'],
+    });
   }
 
   async findOne(id: string) {

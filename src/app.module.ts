@@ -9,9 +9,9 @@ import { LoteModule } from './modules/lote/lote.module';
 import { MeasureUnitModule } from './modules/measure_unit/measure_unit.module';
 import { ProductModule } from './modules/product/product.module';
 import { ProfileModule } from './modules/profile/profile.module';
+import { ProviderModule } from './modules/provider/provider.module';
 import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
-import { ProviderModule } from './modules/provider/provider.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',

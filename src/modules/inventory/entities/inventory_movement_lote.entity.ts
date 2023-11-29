@@ -8,17 +8,18 @@ export class InventoryMovementLote extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
   @ManyToOne(() => Lote, (lote) => lote.id)
-  lote: string;
+  lote: Lote;
 
   @Column()
   folio: string;
 
-  @Column()
+  @Column({ default: 0 })
+  quantity: number;
+
   @ManyToOne(
     () => InventoryMovement,
     (inventoryMovement) => inventoryMovement.id,
   )
-  inventory_movement: string;
+  inventoryMovement: string;
 }
