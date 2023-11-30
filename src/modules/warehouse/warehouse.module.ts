@@ -10,5 +10,6 @@ const repositories = TypeOrmModule.forFeature([Warehouse]);
   controllers: [WarehouseController],
   providers: [WarehouseService],
   imports: [repositories],
+  exports: [WarehouseService],
 })
 export class WarehouseModule {}

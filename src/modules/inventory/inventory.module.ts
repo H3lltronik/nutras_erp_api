@@ -28,5 +28,10 @@ const repositories = TypeOrmModule.forFeature([
     IsEntityExistConstraint,
   ],
   imports: [repositories],
+  exports: [
+    InventoryService,
+    InventoryMovementService,
+    InventoryMovementLoteService,
+  ],
 })
 export class InventoryModule {}
