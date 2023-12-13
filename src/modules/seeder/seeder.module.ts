@@ -16,6 +16,7 @@ import { Provider } from '../provider/entities/provider.entity';
 import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
 import { Warehouse } from '../warehouse/entities/warehouse.entity';
+import { SeederController } from './seeder.controller';
 import { DepartmentSeederService } from './services/department.seeder.service';
 import { InventoryMovementSeederService } from './services/inventory_movement.seeder.service';
 import { InventoryMovementLoteSeederService } from './services/inventory_movement_lote.seeder.service';
@@ -71,5 +72,6 @@ const repositories = TypeOrmModule.forFeature([
     UserSeederService,
   ],
   imports: [repositories, UsersModule],
+  controllers: [SeederController],
 })
 export class SeederModule {}

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Product } from '../../product/entities/product.entity';
 import { GetInventoryFilterDto } from '../dto/inventory/get-inventory.dto';
 import { InventoryMovement } from '../entities/inventory_movement.entity';
 
@@ -9,10 +10,15 @@ export class InventoryService {
   constructor(
     @InjectRepository(InventoryMovement)
     private inventoryMovementsRepository: Repository<InventoryMovement>,
+    @InjectRepository(Product)
+    private productsRepository: Repository<Product>,
   ) {}
 
-  async findAll(getInventoryFilterDto: GetInventoryFilterDto) {
-    const { productId, toId, fromId } = getInventoryFilterDto;
+  async findByProduct(
+    productId: string,
+    getInventoryFilterDto: GetInventoryFilterDto,
+  ) {
+    const { toId, fromId } = getInventoryFilterDto;
     if (!productId) throw new Error('Product id is required');
 
     const inventoryMovements = await this.inventoryMovementsRepository.find({
@@ -88,7 +94,68 @@ export class InventoryService {
     return inventoryArray;
   }
 
-  async find(id: string) {
-    return null;
+  async findAll() {
+    const rawData: RawDataItem[] = await this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.lote', 'lote')
+      .leftJoinAndSelect('lote.inventoryMovementLote', 'inventoryMovementLote')
+      .leftJoinAndSelect(
+        'inventoryMovementLote.inventoryMovement',
+        'inventoryMovement',
+      )
+      .leftJoinAndSelect('inventoryMovement.toWarehouse', 'toWarehouse')
+      .select([
+        'product.id AS product_id',
+        'product.commonName AS product_name',
+        'toWarehouse.id AS warehouse_id',
+        'toWarehouse.name AS warehouse_name',
+        'lote.quantity AS lote_quantity',
+        'inventoryMovementLote.quantity AS inventory_movement_quantity',
+      ])
+      .getRawMany();
+    return rawData;
+
+    const inventory: Record<string, InventoryProduct> = {};
+
+    for (const item of rawData) {
+      if (!item.warehouse_name || !item.warehouse_id) {
+        console.warn(
+          'Warning: Missing warehouse data for product:',
+          item.product_id,
+        );
+        continue; // Skip this iteration if warehouse data is missing
+      }
+
+      if (!inventory[item.product_id]) {
+        inventory[item.product_id] = {
+          product_id: item.product_id,
+          product_name: item.product_name,
+          total_product_count: 0,
+          warehouses: [],
+        };
+      }
+
+      const product = inventory[item.product_id];
+      product.total_product_count += parseInt(item.lote_quantity);
+
+      const warehouseIndex = product.warehouses.findIndex(
+        (w) => w.name === item.warehouse_name,
+      );
+      if (warehouseIndex === -1) {
+        product.warehouses.push({
+          product_count: parseInt(item.lote_quantity),
+          name: item.warehouse_name,
+          id: item.warehouse_id,
+        });
+      } else {
+        product.warehouses[warehouseIndex].product_count += parseInt(
+          item.lote_quantity,
+        );
+      }
+    }
+
+    const formattedInventory: InventoryProduct[] = Object.values(inventory);
+
+    return formattedInventory;
   }
 }

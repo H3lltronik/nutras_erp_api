@@ -26,7 +26,7 @@ export class LoteSeederService {
     return await this.lotesRepository.save({
       code: faker.string.alpha(),
       description: faker.commerce.productDescription(),
-      quantity: faker.number.int({ max: 1000 }),
+      quantity: faker.number.int({ max: 20 }),
       expirationDate: faker.date.future(),
       productId,
       loteEntryTypeId: naturalLoteEntryTypeId,

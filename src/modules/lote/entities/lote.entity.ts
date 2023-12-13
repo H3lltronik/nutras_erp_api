@@ -4,8 +4,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { InventoryMovementLote } from '../../inventory/entities/inventory_movement_lote.entity';
 import { Product } from '../../product/entities/product.entity';
 import { LoteEntryType } from './lote_entry_type.entity';
 
@@ -20,23 +22,30 @@ export class Lote extends TimestampsEntity {
   @Column()
   description: string;
 
-  @Column()
+  @Column('int', { comment: 'Cantidad de producto por lote' })
   quantity: number;
 
   @Column()
   expirationDate: Date;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'uuid' })
   productId: string;
 
   @ManyToOne(() => Product, (product) => product.id)
   @JoinColumn({ name: 'productId' })
   product: Product;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'uuid' })
   loteEntryTypeId: string;
 
   @ManyToOne(() => LoteEntryType, (loteEntryType) => loteEntryType.id)
   @JoinColumn({ name: 'loteEntryTypeId' })
-  lote_entry_type: LoteEntryType;
+  loteEntryType: LoteEntryType;
+
+  @JoinColumn()
+  @OneToMany(
+    () => InventoryMovementLote,
+    (inventoryMovementLote) => inventoryMovementLote.lote,
+  )
+  inventoryMovementLote: InventoryMovementLote;
 }

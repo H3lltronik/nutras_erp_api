@@ -18,9 +18,6 @@ export class InventoryMovement extends TimestampsEntity {
   @Column()
   type: string;
 
-  @Column()
-  quantity: number;
-
   @Column({ nullable: true })
   ot_id: string;
 

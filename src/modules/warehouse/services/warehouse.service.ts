@@ -17,9 +17,10 @@ export class WarehouseService {
   }
 
   findAll() {
+    console.log('Finding all warehouses...');
     return this.warehouseRepository.find({
       withDeleted: false,
-      relations: ['fromInventoryMovements', 'toInventoryMovements'],
+      relations: [],
     });
   }
 

@@ -23,7 +23,7 @@ export class InventoryMovementLoteSeederService {
     const { loteIds, inventoryMovementIds } = config;
 
     const promises: Promise<InventoryMovementLote>[] = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 30; i++) {
       const loteId = faker.helpers.arrayElement(loteIds);
       const inventoryMovementId =
         faker.helpers.arrayElement(inventoryMovementIds);
@@ -31,7 +31,7 @@ export class InventoryMovementLoteSeederService {
         this.inventoryMovementLotesRepository.save({
           loteId,
           folio: faker.string.alpha({ length: 10 }),
-          quantity: faker.number.int({ max: 100 }),
+          quantity: faker.number.int({ max: 10, min: 1 }),
           inventoryMovementId,
         }),
       );

@@ -35,17 +35,15 @@ export class InventoryMovementSeederService {
       generalWarehouseId,
     ];
 
-    const fromId = faker.helpers.arrayElement(warehouseIds);
-
-    const availableToIds = warehouseIds.filter((id) => id !== fromId);
-    const toId = faker.helpers.arrayElement(availableToIds);
-
     const inventoryMovements: InventoryMovement[] = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
+      const fromId = faker.helpers.arrayElement(warehouseIds);
+      const availableToIds = warehouseIds.filter((id) => id !== fromId);
+      const toId = faker.helpers.arrayElement(availableToIds);
       const inventoryMovement = await this.InventoryMovementsRepository.save({
         type: typeString,
-        quantity: faker.number.int({ max: 100 }),
+        quantity: faker.number.int({ max: 10, min: 1 }),
         ot_id: faker.string.alpha({ length: 10 }),
         reason: faker.lorem.sentence(),
         fromId,

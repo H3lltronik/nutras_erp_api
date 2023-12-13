@@ -146,7 +146,7 @@ export class SeederService {
     });
 
     const lotesPromises: Promise<Lote>[] = [];
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 20; j++) {
       lotesPromises.push(
         this.loteSeederService.seed({
           naturalLoteEntryTypeId,
@@ -169,107 +169,7 @@ export class SeederService {
         (inventoryMovement) => inventoryMovement.id,
       ),
     });
+
+    return 'ok';
   }
-
-  // async seed() {
-  //   // DEPARTMENTS
-  //   const directionDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db4';
-  //   const productionDepartmentId = '6cebdab4-cc4b-4bee-b011-286c0ce6979b';
-  //   const purchasesDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db0';
-
-  //   // PROFILES
-  //   const adminProfileId = '65a427ba-d703-4f8f-b688-ccfa44d62db5';
-
-  //   // PRODUCT TYPES
-  //   const productTypePTId = '2ad66400-dbcd-41f0-bb7c-69a8bc674af0';
-  //   const productTypePPId = '95db0130-1e4a-4a96-adb5-ad11a6bdf7cb';
-
-  //   // WAREHOUSE
-  //   const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
-  //   const productionWarehouseId = '5606d5cd-e764-4478-bd2e-639cfb0a90b9';
-  //   const entryWarehouseId = 'afd61497-563d-47c2-aada-b988aea13c97';
-  //   const exitWarehouseId = '6800d31f-c9fd-490c-8c02-3d6c0be5bc14';
-
-  //   // LOTE ENTRY TYPES
-  //   const naturalLoteEntryTypeId = '6cebdab4-cc4b-4bee-b011-286c0ce6979a';
-  //   const divisionLoteEntryTypeId = '65a427ba-d703-4f8f-b688-ccfa44d62dba';
-
-  //   const profiles = await this.profileSeederService.seed({
-  //     adminProfileId,
-  //   });
-  //   const providers = await this.providerSeederService.seed();
-  //   const departments = await this.departmentSeederService.seed({
-  //     directionDepartmentId,
-  //     productionDepartmentId,
-  //     purchasesDepartmentId,
-  //   });
-
-  //   const users = await this.usersSeederService.seed({
-  //     adminProfileId,
-  //     directionDepartmentId,
-  //   });
-  //   const measureUnits = await this.measurementUnitSeederService.seed();
-  //   const productTypes = await this.productTypeSeederService.seed({
-  //     productionDepartmentId,
-  //     purchasesDepartmentId,
-  //     productTypePTId,
-  //     productTypePPId,
-  //   });
-  //   const products: Product[] = [];
-
-  //   for (let i = 0; i < 10; i++) {
-  //     const kosherDetails = await this.kosherDetailsSeederService.seed();
-  //     const productionData = await this.productionDataSeederService.seed();
-  //     const purchaseData = await this.purchaseDataSeederService.seed();
-
-  //     const product = await this.productSeederService.seed({
-  //       kosherDetailsId: kosherDetails.id,
-  //       productionDataId: productionData.id,
-  //       purchaseDataId: purchaseData.id,
-  //       providerIds: providers.map((provider) => provider.id),
-  //       unitIds: measureUnits.map((measureUnit) => measureUnit.id),
-  //       productTypeIds: productTypes.map((productType) => productType.id),
-  //       deparmentIds: departments.map((department) => department.id),
-  //     });
-
-  //     products.push(product);
-
-  //     await this.warehouseSeederService.seed({
-  //       generalWarehouseId,
-  //       productionWarehouseId,
-  //       entryWarehouseId,
-  //       exitWarehouseId,
-  //     });
-  //     await this.loteEntryTypeSeederService.seed({
-  //       naturalLoteEntryTypeId,
-  //       divisionLoteEntryTypeId,
-  //     });
-
-  //     const lotes: Lote[] = [];
-  //     for (let j = 0; j < 10; j++) {
-  //       const lote = await this.loteSeederService.seed({
-  //         naturalLoteEntryTypeId,
-  //         divisionLoteEntryTypeId,
-  //         productIds: products.map((product) => product.id),
-  //       });
-
-  //       lotes.push(lote);
-  //     }
-
-  //     const inventoryMovements = await this.inventoryMovementSeederService.seed(
-  //       {
-  //         entryWarehouseId,
-  //         exitWarehouseId,
-  //         productionWarehouseId,
-  //         generalWarehouseId,
-  //       },
-  //     );
-  //     await this.inventoryMovementLoteSeederService.seed({
-  //       loteIds: lotes.map((lote) => lote.id),
-  //       inventoryMovementIds: inventoryMovements.map(
-  //         (inventoryMovement) => inventoryMovement.id,
-  //       ),
-  //     });
-  //   }
-  // }
 }

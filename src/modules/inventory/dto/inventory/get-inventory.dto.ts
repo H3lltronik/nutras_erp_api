@@ -10,10 +10,10 @@ import { Warehouse } from '@/src/modules/warehouse/entities/warehouse.entity';
 import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 class GetInventoryDto {
-  @IsNotEmpty()
-  @IsUUID()
-  @IsEntityExist(Product)
-  productId: string;
+  // @IsNotEmpty()
+  // @IsUUID()
+  // @IsEntityExist(Product)
+  // productId: string;
 
   @IsOptional()
   @IsUUID()

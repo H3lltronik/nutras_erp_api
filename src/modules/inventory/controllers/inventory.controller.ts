@@ -6,12 +6,15 @@ import { InventoryService } from '../services/inventory.service';
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
   @Get()
-  findAll(@Query() getInventoryFilterDto: GetInventoryFilterDto) {
-    return this.inventoryService.findAll(getInventoryFilterDto);
+  findAll() {
+    return this.inventoryService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.inventoryService.find(id);
+  @Get('/product/:id')
+  findOne(
+    @Param('id') id: string,
+    @Query() getInventoryFilterDto: GetInventoryFilterDto,
+  ) {
+    return this.inventoryService.findByProduct(id, getInventoryFilterDto);
   }
 }
