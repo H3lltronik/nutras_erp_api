@@ -3,7 +3,9 @@ import { CreateLoteDto } from '../dto/lote/create-lote.dto';
 import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lote } from '../entities/lote.entity';
-import { Repository } from 'typeorm';
+import { Batch, Repository } from 'typeorm';
+import { Paginator } from '@/src/common/utils/paginator';
+import { GetLotesFilterDto } from '../dto/lote/get-lote.dto';
 
 @Injectable()
 export class LoteService {
@@ -16,7 +18,14 @@ export class LoteService {
     return await this.loteRepository.save(createLoteDto);
   }
 
-  findAll() {
+  async findAll(filterDto: GetLotesFilterDto) {
+    const { limit, offset, withDeleted } = filterDto;
+
+    const query = this.loteRepository.createQueryBuilder('lote');
+    if (withDeleted === 'true') query.withDeleted();
+
+    const paginator = new Paginator<Lote>();
+    return await paginator.paginate(query, limit, offset);
     return this.loteRepository.find({ withDeleted: false });
   }
 
