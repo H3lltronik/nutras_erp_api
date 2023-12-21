@@ -22,6 +22,11 @@ export class ProductSeederService {
   ) {}
 
   async seed(config: ProductSeederConfig) {
+    const productsInDb = await this.productsRepository.find();
+    if(productsInDb.length > 0) {
+      console.log('Products were already seeded...');
+      return;
+    }
     console.log('Seeding products...');
     const {
       kosherDetailsId,

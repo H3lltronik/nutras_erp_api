@@ -20,6 +20,11 @@ export class InventoryMovementSeederService {
   ) {}
 
   async seed(config: InventoryMovementSeederConfig) {
+    const inventoryMovementsInDb = await this.InventoryMovementsRepository.find();
+    if (inventoryMovementsInDb.length > 0) {
+      console.log('Inventory movements were already seeded...');
+      return;
+    }
     console.log('Seeding inventory movements...');
     const {
       entryWarehouseId,

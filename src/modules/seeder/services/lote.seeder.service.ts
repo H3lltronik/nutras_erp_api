@@ -18,6 +18,11 @@ export class LoteSeederService {
   ) {}
 
   async seed(config: LoteSeederConfig): Promise<Lote> {
+    const lotesInDb = await this.lotesRepository.find();
+    if (lotesInDb.length > 0) {
+      console.log('Lotes were already seeded...');
+      return;
+    }
     console.log('Seeding lotes...');
     const { naturalLoteEntryTypeId, divisionLoteEntryTypeId, productIds } =
       config;
