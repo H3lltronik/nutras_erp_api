@@ -46,6 +46,8 @@ const repositories = TypeOrmModule.forFeature([
     InventoryService,
     InventoryMovementService,
     InventoryMovementLoteService,
+    MovementConceptService,
+    MovementTypeService,
   ],
 })
 export class InventoryModule {}

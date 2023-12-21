@@ -37,6 +37,7 @@ import { MovementTypeSeederService } from './services/movement-type.seeder.servi
 import { MovementConceptSeederService } from './services/movement-concept.seeder.service';
 import { MovementConcept } from '../inventory/entities/movement_concept.entity';
 import { MovementType } from '../inventory/entities/movement_type.entity';
+import { InventoryModule } from '../inventory/inventory.module';
 
 const repositories = TypeOrmModule.forFeature([
   MeasureUnit,
@@ -79,7 +80,7 @@ const repositories = TypeOrmModule.forFeature([
     MovementTypeSeederService,
     MovementConceptSeederService,
   ],
-  imports: [repositories, UsersModule],
+  imports: [repositories, UsersModule, InventoryModule],
   controllers: [SeederController],
 })
 export class SeederModule {}
