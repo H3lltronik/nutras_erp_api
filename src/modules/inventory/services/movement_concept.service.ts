@@ -10,6 +10,15 @@ export class MovementConceptService {
     private movementConceptRepository: Repository<MovementConcept>,
   ) {}
 
+  findOrCreateByName(data: Partial<MovementConcept>) {
+    const movementFound = this.movementConceptRepository.exist({
+      where: { name: data.name }
+    });
+    if(movementFound) return movementFound;
+    const movementConcept = this.movementConceptRepository.create(data);
+    return this.movementConceptRepository.save(movementConcept);
+  }
+
   findAll() {
     return this.movementConceptRepository.find({
       withDeleted: false,

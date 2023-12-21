@@ -33,6 +33,10 @@ import { PurchaseDataSeederService } from './services/purchase-data.seeder.servi
 import { SeederService } from './services/seeder.service';
 import { UserSeederService } from './services/user.seeder.service';
 import { WarehouseSeederService } from './services/warehouse.seeder.service';
+import { MovementTypeSeederService } from './services/movement-type.seeder.service';
+import { MovementConceptSeederService } from './services/movement-concept.seeder.service';
+import { MovementConcept } from '../inventory/entities/movement_concept.entity';
+import { MovementType } from '../inventory/entities/movement_type.entity';
 
 const repositories = TypeOrmModule.forFeature([
   MeasureUnit,
@@ -50,6 +54,8 @@ const repositories = TypeOrmModule.forFeature([
   KosherDetails,
   ProductionData,
   Product,
+  MovementType,
+  MovementConcept,
 ]);
 
 @Module({
@@ -70,6 +76,8 @@ const repositories = TypeOrmModule.forFeature([
     PurchaseDataSeederService,
     WarehouseSeederService,
     UserSeederService,
+    MovementTypeSeederService,
+    MovementConceptSeederService,
   ],
   imports: [repositories, UsersModule],
   controllers: [SeederController],

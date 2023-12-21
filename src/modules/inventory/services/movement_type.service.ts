@@ -16,6 +16,15 @@ export class MovementTypeService {
     });
   }
 
+  async findOrCreateByName(data: Partial<MovementType>) {
+    const movementFound = await this.movementTypeRepository.findOne({
+      where: { name: data.name },
+    });
+    if (movementFound) return movementFound;
+    const movementType = this.movementTypeRepository.create(data);
+    return this.movementTypeRepository.save(movementType);
+  }
+
   async findOne(id: string) {
     const movementType = await this.movementTypeRepository.findOne({
       where: { id },
