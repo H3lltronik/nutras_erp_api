@@ -10,13 +10,17 @@ export class MovementConceptService {
     private movementConceptRepository: Repository<MovementConcept>,
   ) {}
 
-  findOrCreateByName(data: Partial<MovementConcept>) {
-    const movementFound = this.movementConceptRepository.exist({
+  async findOrCreateByName(data: Partial<MovementConcept>) {
+    const movementFound = await this.movementConceptRepository.exist({
       where: { name: data.name }
     });
     if(movementFound) return movementFound;
-    const movementConcept = this.movementConceptRepository.create(data);
-    return this.movementConceptRepository.save(movementConcept);
+
+    const newMovement = new MovementConcept();
+    newMovement.name = data.name;
+    newMovement.movementTypeId = data.movementTypeId;
+
+    return this.movementConceptRepository.save(newMovement);
   }
 
   findAll() {

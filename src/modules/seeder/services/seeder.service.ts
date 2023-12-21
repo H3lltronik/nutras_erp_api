@@ -142,7 +142,7 @@ export class SeederService {
         deparmentIds: departments.map((department) => department.id),
       });
 
-      products.push(product);
+      if(product) products.push(product);
     }
 
     await this.warehouseSeederService.seed({
@@ -156,33 +156,36 @@ export class SeederService {
       divisionLoteEntryTypeId,
     });
 
-    const lotesPromises: Promise<Lote>[] = [];
-    for (let j = 0; j < 20; j++) {
-      lotesPromises.push(
-        this.loteSeederService.seed({
-          naturalLoteEntryTypeId,
-          divisionLoteEntryTypeId,
-          productIds: products.map((product) => product.id),
-        }),
-      );
+    if(!!products && products.length) {
+      const lotesPromises: Promise<Lote>[] = [];
+      for (let j = 0; j < 20; j++) {
+        lotesPromises.push(
+          this.loteSeederService.seed({
+            naturalLoteEntryTypeId,
+            divisionLoteEntryTypeId,
+            productIds: products.map((product) => product.id),
+          }),
+        );
+      }
+      const lotes: Lote[] = await Promise.all(lotesPromises);
+
+      const inventoryMovements = await this.inventoryMovementSeederService.seed({
+        entryWarehouseId,
+        exitWarehouseId,
+        productionWarehouseId,
+        generalWarehouseId,
+      });
+      await this.inventoryMovementLoteSeederService.seed({
+        loteIds: lotes.map((lote) => lote.id),
+        inventoryMovementIds: inventoryMovements.map(
+          (inventoryMovement) => inventoryMovement.id,
+        ),
+      });
     }
-    const lotes: Lote[] = await Promise.all(lotesPromises);
 
-    const inventoryMovements = await this.inventoryMovementSeederService.seed({
-      entryWarehouseId,
-      exitWarehouseId,
-      productionWarehouseId,
-      generalWarehouseId,
-    });
-    await this.inventoryMovementLoteSeederService.seed({
-      loteIds: lotes.map((lote) => lote.id),
-      inventoryMovementIds: inventoryMovements.map(
-        (inventoryMovement) => inventoryMovement.id,
-      ),
-    });
 
-    // await this.movementTypeSeederService.seed();
-    // await this.movementConceptSeederService.seed();
+    await this.movementTypeSeederService.seed();
+    await this.movementConceptSeederService.seed();
 
     return 'ok';
   }

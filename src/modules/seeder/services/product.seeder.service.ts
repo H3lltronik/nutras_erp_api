@@ -25,7 +25,7 @@ export class ProductSeederService {
     const productsInDb = await this.productsRepository.find();
     if(productsInDb.length > 0) {
       console.log('Products were already seeded...');
-      return;
+      return null;
     }
     console.log('Seeding products...');
     const {
