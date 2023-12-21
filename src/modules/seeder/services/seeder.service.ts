@@ -23,6 +23,8 @@ import { ProviderSeederService } from './provider.seeder.service';
 import { PurchaseDataSeederService } from './purchase-data.seeder.service';
 import { UserSeederService } from './user.seeder.service';
 import { WarehouseSeederService } from './warehouse.seeder.service';
+import { MovementTypeSeederService } from './movement-type.seeder.service';
+import { MovementConceptSeederService } from './movement-concept.seeder.service';
 
 @Injectable()
 export class SeederService {
@@ -42,6 +44,8 @@ export class SeederService {
     private purchaseDataSeederService: PurchaseDataSeederService,
     private warehouseSeederService: WarehouseSeederService,
     private usersSeederService: UserSeederService,
+    private movementTypeSeederService: MovementTypeSeederService,
+    private movementConceptSeederService: MovementConceptSeederService,
   ) {}
 
   async seed() {
@@ -66,6 +70,9 @@ export class SeederService {
     // LOTE ENTRY TYPES
     const naturalLoteEntryTypeId = '6cebdab4-cc4b-4bee-b011-286c0ce6979a';
     const divisionLoteEntryTypeId = '65a427ba-d703-4f8f-b688-ccfa44d62dba';
+
+    // Movement Types
+
 
     const loaders1 = await Promise.allSettled([
       this.profileSeederService.seed({
@@ -98,10 +105,14 @@ export class SeederService {
       productTypePPId,
     });
 
-    const users = await this.usersSeederService.seed({
-      adminProfileId,
-      directionDepartmentId,
-    });
+    try {
+      const users = await this.usersSeederService.seed({
+        adminProfileId,
+        directionDepartmentId,
+      });
+    } catch (error) {
+      console.error("Error seeding users", error);
+    }
     const products: Product[] = [];
 
     for (let i = 0; i < 10; i++) {
@@ -170,6 +181,10 @@ export class SeederService {
       ),
     });
 
+    // await this.movementTypeSeederService.seed();
+    // await this.movementConceptSeederService.seed();
+
     return 'ok';
   }
+
 }
