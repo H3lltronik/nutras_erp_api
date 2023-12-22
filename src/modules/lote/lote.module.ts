@@ -13,5 +13,6 @@ const repositories = TypeOrmModule.forFeature([Lote, LoteEntryType]);
   controllers: [LoteController, LoteEntryTypeController],
   providers: [LoteService, LoteEntryTypeService],
   imports: [repositories],
+  exports: [LoteService, LoteEntryTypeService],
 })
 export class LoteModule {}

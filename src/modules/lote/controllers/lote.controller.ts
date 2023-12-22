@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { LoteService } from '../services/lote.service';
 import { CreateLoteDto } from '../dto/lote/create-lote.dto';
 import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
+import { GetLotesFilterDto } from '../dto/lote/get-lote.dto';
 
 @Controller('lote')
 export class LoteController {
@@ -21,8 +23,8 @@ export class LoteController {
   }
 
   @Get()
-  findAll() {
-    return this.loteService.findAll();
+  findAll(@Query() filterDto: GetLotesFilterDto) {
+    return this.loteService.findAll(filterDto);
   }
 
   @Get(':id')

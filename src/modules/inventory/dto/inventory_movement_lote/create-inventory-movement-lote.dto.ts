@@ -1,11 +1,16 @@
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateInventoryMovementLoteDto {
   @IsNotEmpty()
-  lote: string;
+  loteId: string;
 
   @IsNotEmpty()
   folio: string;
+
+  @IsNotEmpty()
+  @Min(1)
+  @IsNumber()
+  quantity: number;
 
   @IsNotEmpty()
   inventory_movement: string;

@@ -19,7 +19,10 @@ export class InventoryMovementService {
   }
 
   findAll() {
-    return this.inventoryMovementRepository.find({ withDeleted: false });
+    return this.inventoryMovementRepository.find({
+      withDeleted: false,
+      relations: ['fromId', 'toId'],
+    });
   }
 
   async findOne(id: string) {
