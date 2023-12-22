@@ -25,6 +25,7 @@ export class MovementConceptService {
 
   findAll() {
     return this.movementConceptRepository.find({
+      relations: ['movementType'],
       withDeleted: false,
     });
   }
@@ -32,6 +33,7 @@ export class MovementConceptService {
   async findOne(id: string) {
     const movementConcept = await this.movementConceptRepository.findOne({
       where: { id },
+      relations: ['movementType'],
       withDeleted: false,
     });
 
