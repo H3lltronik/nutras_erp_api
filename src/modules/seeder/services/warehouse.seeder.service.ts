@@ -48,6 +48,36 @@ export class WarehouseSeederService {
         id: exitWarehouseId,
         address: faker.string.alpha({ length: 10 }),
       },
+      {
+        name: 'Proveedor',
+        id: "4726f79a-b220-4eec-9d68-cdd9f4b8a92d",
+        address: faker.string.alpha({ length: 10 }),
+        hidden: true,
+      },
+      {
+        name: 'Cliente',
+        id: "6c82d8ee-cb13-4d7a-ab60-0de1ce6909f5",
+        address: faker.string.alpha({ length: 10 }),
+        hidden: true,
+      },
+      {
+        name: 'Donación humana',
+        id: "54304806-604e-493d-8d58-a37f360c26f8",
+        address: faker.string.alpha({ length: 10 }),
+        hidden: true,
+      },
+      {
+        name: 'Basura',
+        id: "33ad4c77-610e-4b67-83a6-d588026a09cb",
+        address: faker.string.alpha({ length: 10 }),
+        hidden: true,
+      },
+      {
+        name: 'Ganado',
+        id: "c52c7f3b-0668-4ae1-8c19-533f80c3594d",
+        address: faker.string.alpha({ length: 10 }),
+        hidden: true,
+      },
     ]);
   }
 }
