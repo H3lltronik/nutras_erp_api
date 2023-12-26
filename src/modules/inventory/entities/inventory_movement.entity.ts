@@ -9,11 +9,15 @@ import {
 } from 'typeorm';
 import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 import { InventoryMovementLote } from './inventory_movement_lote.entity';
+import { MovementConcept } from './movement_concept.entity';
 
 @Entity()
 export class InventoryMovement extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({type: 'timestamp', default: new Date().toISOString(), nullable: false})
+  date: string;
 
   @Column()
   type: string;
@@ -23,6 +27,10 @@ export class InventoryMovement extends TimestampsEntity {
 
   @Column({ type: 'text', nullable: true })
   reason: string;
+
+  @ManyToOne(() => MovementConcept, (movementConcept) => movementConcept.id)
+  @JoinColumn({ name: 'movementConceptId' })
+  movementConcept: MovementConcept;
 
   @Column({ type: 'uuid', nullable: true })
   fromId: string;

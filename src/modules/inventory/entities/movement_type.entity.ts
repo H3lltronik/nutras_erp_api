@@ -9,7 +9,4 @@ export class MovementType extends TimestampsEntity {
 
   @Column({ nullable: true })
   name: string;
-
-  @OneToMany(() => MovementConcept, (movementConcept) => movementConcept.movementType)
-  movementConcepts: MovementConcept[];
 }
