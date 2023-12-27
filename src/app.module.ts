@@ -13,6 +13,8 @@ import { ProviderModule } from './modules/provider/provider.module';
 import { SeederModule } from './modules/seeder/seeder.module';
 import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
+import { WorkOrderModule } from './modules/work_order/work-order.module';
+import { WorkRequestModule } from './modules/work_request/work-request.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -38,6 +40,8 @@ const typeOrm = TypeOrmModule.forRoot({
     WarehouseModule,
     MeasureUnitModule,
     DepartmentModule,
+    WorkOrderModule,
+    WorkRequestModule,
     SeederModule,
     ConfigModule.forRoot({
       isGlobal: true,
