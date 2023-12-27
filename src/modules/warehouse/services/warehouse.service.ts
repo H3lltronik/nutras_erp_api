@@ -17,7 +17,6 @@ export class WarehouseService {
   }
 
   findAll() {
-    console.log('Finding all warehouses...');
     return this.warehouseRepository.find({
       // where: { hidden: false },
       withDeleted: false,

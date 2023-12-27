@@ -16,7 +16,7 @@ export class MovementConceptSeederService {
         {
             name: "Salida a producción",
             movementTypeId: "62dcc55d-1c72-4469-b5be-0f37cd184851",
-            originWarehouseId: "5606d5cd-e764-4478-bd2e-639cfb0a90b9",
+            originWarehouseId: "621b95b5-6320-4e62-8b9d-4bc068867ee6",
             destinyWarehouseId: "5606d5cd-e764-4478-bd2e-639cfb0a90b9",
         },
         {

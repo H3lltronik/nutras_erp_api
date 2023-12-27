@@ -41,11 +41,13 @@ export class WarehouseSeederService {
       {
         name: 'Entrada',
         id: entryWarehouseId,
+        hidden: true,
         address: faker.string.alpha({ length: 10 }),
       },
       {
         name: 'Salida',
         id: exitWarehouseId,
+        hidden: true,
         address: faker.string.alpha({ length: 10 }),
       },
       {
