@@ -11,21 +11,29 @@ export class MovementConceptService {
   ) {}
 
   async findOrCreateByName(data: Partial<MovementConcept>) {
-    const movementFound = await this.movementConceptRepository.exist({
-      where: { name: data.name }
+    let where: Array<any> = [];
+    if(!!data.name) where.push({ name: data.name });
+    if(!!data.id) where.push({ id: data.id });
+    const movementFound = await this.movementConceptRepository.findOne({
+      where
     });
-    if(movementFound) return movementFound;
+    if(!!movementFound) {
+      await this.update(movementFound.id, data);
+      return movementFound;
+    }
 
     const newMovement = new MovementConcept();
     newMovement.name = data.name;
     newMovement.movementTypeId = data.movementTypeId;
+    newMovement.originWarehouseId = data.originWarehouseId;
+    newMovement.destinyWarehouseId = data.destinyWarehouseId;
 
     return this.movementConceptRepository.save(newMovement);
   }
 
   findAll() {
     return this.movementConceptRepository.find({
-      relations: ['movementType'],
+      relations: ['movementType', 'originWarehouse', 'destinyWarehouse'],
       withDeleted: false,
     });
   }
@@ -43,4 +51,16 @@ export class MovementConceptService {
 
     return movementConcept;
   }
+
+  async update(id: string, data: Partial<MovementConcept>) {
+    await this.movementConceptRepository.update(id, data);
+
+    const movementConcept = await this.movementConceptRepository.findOne({
+      where: { id },
+      withDeleted: false,
+    });
+
+    return movementConcept;
+  }
+
 }
