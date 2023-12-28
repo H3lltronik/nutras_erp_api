@@ -19,7 +19,7 @@ export class Lote extends TimestampsEntity {
   @Column()
   code: string;
 
-  @Column()
+  @Column({nullable: true})
   description: string;
 
   @Column('int', { comment: 'Cantidad de producto por lote' })

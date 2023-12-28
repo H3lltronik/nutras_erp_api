@@ -16,6 +16,9 @@ import { InventoryMovementService } from './services/inventory-movement.service'
 import { InventoryService } from './services/inventory.service';
 import { MovementConceptService } from './services/movement_concept.service';
 import { MovementTypeService } from './services/movement_type.service';
+import { LoteService } from '../lote/services/lote.service';
+import { LoteController } from '../lote/controllers/lote.controller';
+import { Lote } from '../lote/entities/lote.entity';
 
 const repositories = TypeOrmModule.forFeature([
   InventoryMovement,
@@ -23,6 +26,7 @@ const repositories = TypeOrmModule.forFeature([
   MovementConcept,
   MovementType,
   Product,
+  Lote,
 ]);
 
 @Module({
@@ -32,6 +36,7 @@ const repositories = TypeOrmModule.forFeature([
     InventoryMovementLoteController,
     MovementConceptController,
     MovementTypeController,
+    LoteController,
   ],
   providers: [
     InventoryService,
@@ -39,6 +44,7 @@ const repositories = TypeOrmModule.forFeature([
     InventoryMovementLoteService,
     MovementConceptService,
     MovementTypeService,
+    LoteService,
     IsEntityExistConstraint,
   ],
   imports: [repositories],

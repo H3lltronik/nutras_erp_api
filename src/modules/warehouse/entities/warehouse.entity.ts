@@ -10,6 +10,9 @@ export class Warehouse extends TimestampsEntity {
   @Column()
   name: string;
 
+  @Column({ default: false })
+  hidden: boolean;
+
   @Column()
   address: string;
 

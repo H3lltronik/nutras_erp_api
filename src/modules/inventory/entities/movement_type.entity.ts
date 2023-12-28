@@ -1,15 +1,14 @@
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { MovementConcept } from './movement_concept.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'movement_type' })
 export class MovementType extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   name: string;
 
-  @OneToMany(() => MovementConcept, (movementConcept) => movementConcept.movementType)
-  movementConcepts: MovementConcept[];
+  @Column({ nullable: false })
+  action: 'input' | 'output';
 }

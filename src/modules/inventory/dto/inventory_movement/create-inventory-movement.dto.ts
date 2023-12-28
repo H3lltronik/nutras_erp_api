@@ -3,17 +3,10 @@ import { Warehouse } from '@/src/modules/warehouse/entities/warehouse.entity';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateInventoryMovementDto {
-  @IsNotEmpty()
-  type: string;
-
-  @IsNotEmpty()
-  quantity: number;
-
+  reason: string;
+  
   @IsNotEmpty()
   ot_id: string;
-
-  @IsNotEmpty()
-  reason: string;
 
   @IsNotEmpty()
   @IsUUID()
