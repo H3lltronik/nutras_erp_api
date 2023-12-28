@@ -10,6 +10,7 @@ import {
 import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 import { InventoryMovementLote } from './inventory_movement_lote.entity';
 import { MovementConcept } from './movement_concept.entity';
+import { WorkOrder } from '../../work_order/entities/work-order.entity';
 
 @Entity()
 export class InventoryMovement extends TimestampsEntity {
@@ -21,6 +22,10 @@ export class InventoryMovement extends TimestampsEntity {
 
   @Column({ nullable: true })
   ot_id: string;
+
+  @ManyToOne(() => WorkOrder, (workOrder) => workOrder.id)
+  @JoinColumn({ name: 'ot_id' })
+  ot: WorkOrder;
 
   @Column({ type: 'text', nullable: true })
   reason: string;

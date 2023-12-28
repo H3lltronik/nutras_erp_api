@@ -64,7 +64,16 @@ export class InventoryMovementService {
 
   findAll() {
     return this.inventoryMovementRepository.find({
-      withDeleted: false
+      withDeleted: false,
+      relations: [
+        'ot',
+        'fromWarehouse',
+        'toWarehouse',
+        'movementConcept',
+        'inventoryMovementLotes',
+        'inventoryMovementLotes.lote',
+        'inventoryMovementLotes.lote.product',
+      ],
     });
   }
 
