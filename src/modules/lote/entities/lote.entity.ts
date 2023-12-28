@@ -10,6 +10,7 @@ import {
 import { InventoryMovementLote } from '../../inventory/entities/inventory_movement_lote.entity';
 import { Product } from '../../product/entities/product.entity';
 import { LoteEntryType } from './lote_entry_type.entity';
+import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 
 @Entity()
 export class Lote extends TimestampsEntity {
@@ -41,6 +42,13 @@ export class Lote extends TimestampsEntity {
   @ManyToOne(() => LoteEntryType, (loteEntryType) => loteEntryType.id)
   @JoinColumn({ name: 'loteEntryTypeId' })
   loteEntryType: LoteEntryType;
+
+  @Column({ type: 'uuid' })
+  wharehouseId: string;
+
+  @ManyToOne(() => Warehouse, (warehouse) => warehouse.id)
+  @JoinColumn({ name: 'wharehouseId' })
+  warehouse: Warehouse;
 
   @JoinColumn()
   @OneToMany(

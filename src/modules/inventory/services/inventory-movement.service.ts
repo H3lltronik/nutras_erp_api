@@ -45,6 +45,7 @@ export class InventoryMovementService {
           ...batch,
           expirationDate: new Date(batch.expirationDate),
           loteEntryTypeId: naturalLoteEntryTypeId,
+          wharehouseId: inventoryMovement.toWarehouseId,
         });
         
         const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
