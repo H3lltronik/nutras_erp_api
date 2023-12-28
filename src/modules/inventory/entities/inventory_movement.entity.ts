@@ -19,14 +19,14 @@ export class InventoryMovement extends TimestampsEntity {
   @Column({type: 'timestamp', default: new Date().toISOString(), nullable: false})
   date: string;
 
-  @Column()
-  type: string;
-
   @Column({ nullable: true })
   ot_id: string;
 
   @Column({ type: 'text', nullable: true })
   reason: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  movementConceptId: string;
 
   @ManyToOne(() => MovementConcept, (movementConcept) => movementConcept.id)
   @JoinColumn({ name: 'movementConceptId' })

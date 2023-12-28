@@ -5,13 +5,13 @@ export class CreateInventoryMovementLoteDto {
   loteId: string;
 
   @IsNotEmpty()
+  inventoryMovementId: string;
+
+  @IsNotEmpty()
   folio: string;
 
   @IsNotEmpty()
   @Min(1)
   @IsNumber()
   quantity: number;
-
-  @IsNotEmpty()
-  inventory_movement: string;
 }

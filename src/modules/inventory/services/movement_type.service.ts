@@ -20,7 +20,11 @@ export class MovementTypeService {
     const movementFound = await this.movementTypeRepository.findOne({
       where: { name: data.name },
     });
-    if (movementFound) return movementFound;
+    if(movementFound) {
+      movementFound.name = data.name;
+      movementFound.action = data.action;
+      return this.movementTypeRepository.save(movementFound);
+    }
     const movementType = this.movementTypeRepository.create(data);
     return this.movementTypeRepository.save(movementType);
   }

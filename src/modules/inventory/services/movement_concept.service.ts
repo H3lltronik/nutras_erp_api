@@ -11,11 +11,8 @@ export class MovementConceptService {
   ) {}
 
   async findOrCreateByName(data: Partial<MovementConcept>) {
-    let where: Array<any> = [];
-    if(!!data.name) where.push({ name: data.name });
-    if(!!data.id) where.push({ id: data.id });
     const movementFound = await this.movementConceptRepository.findOne({
-      where
+      where: { name: data.name }
     });
     if(!!movementFound) {
       await this.update(movementFound.id, data);

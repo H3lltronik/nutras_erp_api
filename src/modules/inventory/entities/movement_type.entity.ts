@@ -6,6 +6,9 @@ export class MovementType extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   name: string;
+
+  @Column({ nullable: false })
+  action: 'input' | 'output';
 }

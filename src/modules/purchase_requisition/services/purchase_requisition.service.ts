@@ -91,6 +91,10 @@ export class PurchaseRequisitionService {
       'purchaseRequisition.purchase_requisition_products',
       'purchase_requisition_products',
     );
+    query.leftJoinAndSelect(
+      'purchase_requisition_products.product',
+      'product',
+    );
 
     if (withDeleted === 'true') query.withDeleted();
 
