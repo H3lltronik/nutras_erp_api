@@ -10,6 +10,7 @@ import { MeasureUnitModule } from './modules/measure_unit/measure_unit.module';
 import { ProductModule } from './modules/product/product.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ProviderModule } from './modules/provider/provider.module';
+import { PurchaseRequisitionModule } from './modules/purchase_requisition/purchase_requisition.module';
 import { SeederModule } from './modules/seeder/seeder.module';
 import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
@@ -42,6 +43,7 @@ const typeOrm = TypeOrmModule.forRoot({
     DepartmentModule,
     WorkOrderModule,
     WorkRequestModule,
+    PurchaseRequisitionModule,
     SeederModule,
     ConfigModule.forRoot({
       isGlobal: true,
