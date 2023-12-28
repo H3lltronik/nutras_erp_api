@@ -87,6 +87,10 @@ export class PurchaseRequisitionService {
     query.orderBy('purchaseRequisition.partidaId', 'DESC');
     query.leftJoinAndSelect('purchaseRequisition.user', 'user');
     query.leftJoinAndSelect('purchaseRequisition.work_orders', 'work_orders');
+    query.leftJoinAndSelect(
+      'purchaseRequisition.purchase_requisition_products',
+      'purchase_requisition_products',
+    );
 
     if (withDeleted === 'true') query.withDeleted();
 

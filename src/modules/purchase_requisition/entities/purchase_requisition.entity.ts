@@ -36,7 +36,7 @@ export class PurchaseRequisition
 
   @JoinColumn({ name: 'work_order_id' })
   @ManyToOne(() => WorkOrder, (workOrder) => workOrder.id)
-  work_order: WorkOrder;
+  work_orders: WorkOrder;
 
   @Column({ nullable: true })
   user_id: string;
