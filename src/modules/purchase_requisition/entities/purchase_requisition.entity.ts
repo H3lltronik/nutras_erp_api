@@ -6,10 +6,12 @@ import {
   Generated,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { WorkOrder } from '../../work_order/entities/work-order.entity';
+import { PurchaseRequisitionProduct } from './purchase_requisition_product.entity';
 
 @Entity({ name: 'purchase_requisition' })
 export class PurchaseRequisition
@@ -45,4 +47,12 @@ export class PurchaseRequisition
 
   @Column({ nullable: true })
   motive: string;
+
+  @JoinColumn()
+  @OneToMany(
+    () => PurchaseRequisitionProduct,
+    (purchaseRequisitionProduct) =>
+      purchaseRequisitionProduct.purchase_requisition,
+  )
+  purchase_requisition_products: PurchaseRequisitionProduct[];
 }
