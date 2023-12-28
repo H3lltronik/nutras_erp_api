@@ -45,7 +45,7 @@ export class InventoryMovementService {
           ...batch,
           expirationDate: new Date(batch.expirationDate),
           loteEntryTypeId: naturalLoteEntryTypeId,
-          wharehouseId: inventoryMovement.toWarehouseId,
+          wharehouseId: inventoryMovement.destinyWarehouseId,
         });
         
         const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
@@ -60,7 +60,7 @@ export class InventoryMovementService {
   }
 
   async createOutputInventoryMovement(inventoryMovement: any) {
-    return this.inventoryMovementRepository.save(inventoryMovement);
+    // here goes the movements from one warehouse to another
   }
 
   findAll() {
