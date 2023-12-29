@@ -9,6 +9,6 @@ export class MovementType extends TimestampsEntity {
   @Column({ nullable: false })
   name: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   action: 'input' | 'output';
 }
