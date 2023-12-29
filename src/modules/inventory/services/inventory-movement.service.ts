@@ -52,6 +52,7 @@ export class InventoryMovementService {
           expirationDate: new Date(batch.expirationDate),
           loteEntryTypeId: naturalLoteEntryTypeId,
           wharehouseId: inventoryMovement.destinyWarehouseId,
+          description: "Lote de entrada"
         });
 
         const newInventoryMovementLote =
@@ -84,6 +85,7 @@ export class InventoryMovementService {
       'inventoryMovement.movementConcept',
       'movementConcept',
     );
+    query.leftJoinAndSelect('movementConcept.movementType', 'movementType')
     query.leftJoinAndSelect(
       'inventoryMovement.inventoryMovementLotes',
       'inventoryMovementLotes',
