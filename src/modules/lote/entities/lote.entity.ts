@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { InventoryMovementLote } from '../../inventory/entities/inventory_movement_lote.entity';
 import { Product } from '../../product/entities/product.entity';
-import { LoteEntryType } from './lote_entry_type.entity';
 import { Warehouse } from '../../warehouse/entities/warehouse.entity';
+import { LoteEntryType } from './lote_entry_type.entity';
 
 @Entity()
 export class Lote extends TimestampsEntity {
@@ -20,7 +20,7 @@ export class Lote extends TimestampsEntity {
   @Column()
   code: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   description: string;
 
   @Column('int', { comment: 'Cantidad de producto por lote' })
@@ -43,7 +43,7 @@ export class Lote extends TimestampsEntity {
   @JoinColumn({ name: 'loteEntryTypeId' })
   loteEntryType: LoteEntryType;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   wharehouseId: string;
 
   @ManyToOne(() => Warehouse, (warehouse) => warehouse.id)
