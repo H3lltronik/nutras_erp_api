@@ -2,7 +2,7 @@ import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class LoteEntryType extends TimestampsEntity {
+export class PurchaseOrderEntryType extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
