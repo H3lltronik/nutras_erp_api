@@ -38,7 +38,7 @@ export class PurchaseOrderService {
     });
 
     if (!purchaseOrder) {
-      throw new HttpException('Measure unit not found', 404);
+      throw new HttpException('Purchase order not found', 404);
     }
 
     return purchaseOrder;

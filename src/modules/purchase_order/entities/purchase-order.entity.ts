@@ -8,8 +8,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../../product/entities/product.entity';
-import { PurchaseOrderEntryType } from './purchase-order_entry_type.entity';
 import { WorkOrder } from '../../work_order/entities/work-order.entity';
 import { User } from '../../users/entities/user.entity';
 
