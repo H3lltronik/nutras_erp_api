@@ -27,6 +27,9 @@ export class PurchaseOrder extends TimestampsEntity {
   partidaId: number;
 
   @Column({ nullable: true })
+  folio: string;
+
+  @Column({ nullable: true })
   workOrderId: string;
 
   @JoinColumn({ name: 'workOrderId' })
