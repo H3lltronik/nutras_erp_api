@@ -1,4 +1,5 @@
 import { Paginator } from '@/src/common/utils/paginator';
+import { faker } from '@faker-js/faker';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +11,7 @@ import { InventoryMovement } from '../entities/inventory_movement.entity';
 import { InventoryMovementFiltersHandler } from '../filters/inventory-movement-filters.handler';
 import { InventoryMovementLoteService } from './inventory-movement-lote.service';
 import { MovementTypeService } from './movement_type.service';
+import { InventoryMovementData } from './types';
 
 // LOTE ENTRY TYPES
 const naturalLoteEntryTypeId = '6cebdab4-cc4b-4bee-b011-286c0ce6979a';
@@ -20,6 +22,7 @@ export class InventoryMovementService {
   constructor(
     @InjectRepository(InventoryMovement)
     private inventoryMovementRepository: Repository<InventoryMovement>,
+    // private inventoryMovementLoteRepository: Repository<InventoryMovementLote>,
     private movementTypeService: MovementTypeService,
     private loteService: LoteService,
     private inventoryMovementLoteService: InventoryMovementLoteService,
@@ -52,7 +55,7 @@ export class InventoryMovementService {
           expirationDate: new Date(batch.expirationDate),
           loteEntryTypeId: naturalLoteEntryTypeId,
           wharehouseId: inventoryMovement.destinyWarehouseId,
-          description: "Lote de entrada"
+          description: 'Lote de entrada',
         });
 
         const newInventoryMovementLote =
@@ -67,8 +70,35 @@ export class InventoryMovementService {
     return;
   }
 
-  async createOutputInventoryMovement(inventoryMovement: any) {
-    // here goes the movements from one warehouse to another
+  async createOutputInventoryMovement(
+    inventoryMovement: InventoryMovementData,
+  ) {
+    const result = [];
+    for (const inventoryMovementLote of inventoryMovement.lotes) {
+      const inventoryMovementInstance =
+        await this.inventoryMovementLoteService.findOne(
+          inventoryMovementLote.id,
+        );
+
+      const entity = await this.inventoryMovementLoteService.create({
+        inventoryMovementId: inventoryMovement.id,
+        folio: faker.string.alphanumeric(10),
+        quantity: inventoryMovementLote.quantity,
+        loteId: inventoryMovementInstance.loteId,
+      });
+
+      result.push(entity);
+    }
+
+    return result;
+
+    // const test = await this.loteService.findOne({
+    //   id: inventoryMovement.lotes[0].id,
+    //   relations: {
+    //     loteEntryType: true,
+    //   },
+    // });
+    // console.log(test);
   }
 
   async findAll(filterDto: GetInventoryMovementFilterDto) {
@@ -85,7 +115,7 @@ export class InventoryMovementService {
       'inventoryMovement.movementConcept',
       'movementConcept',
     );
-    query.leftJoinAndSelect('movementConcept.movementType', 'movementType')
+    query.leftJoinAndSelect('movementConcept.movementType', 'movementType');
     query.leftJoinAndSelect(
       'inventoryMovement.inventoryMovementLotes',
       'inventoryMovementLotes',

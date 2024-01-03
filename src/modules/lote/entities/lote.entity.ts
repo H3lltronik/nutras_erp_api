@@ -36,7 +36,7 @@ export class Lote extends TimestampsEntity {
   @JoinColumn({ name: 'productId' })
   product: Product;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   loteEntryTypeId: string;
 
   @ManyToOne(() => LoteEntryType, (loteEntryType) => loteEntryType.id)
@@ -47,7 +47,7 @@ export class Lote extends TimestampsEntity {
   wharehouseId: string;
 
   @ManyToOne(() => Warehouse, (warehouse) => warehouse.id)
-  @JoinColumn({ name: 'wharehouseId' })
+  @JoinColumn({ name: 'warehouseId' })
   warehouse: Warehouse;
 
   @JoinColumn()

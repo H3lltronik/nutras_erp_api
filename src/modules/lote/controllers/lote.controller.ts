@@ -1,17 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
-import { LoteService } from '../services/lote.service';
 import { CreateLoteDto } from '../dto/lote/create-lote.dto';
-import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
 import { GetLotesFilterDto } from '../dto/lote/get-lote.dto';
+import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
+import { LoteService } from '../services/lote.service';
 
 @Controller('lote')
 export class LoteController {
@@ -29,7 +29,9 @@ export class LoteController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.loteService.findOne(id);
+    return this.loteService.findOne({
+      id,
+    });
   }
 
   @Patch(':id')
