@@ -92,7 +92,7 @@ export class InventoryMovementService {
     );
     query.leftJoinAndSelect('inventoryMovementLotes.lote', 'lote');
     query.leftJoinAndSelect('lote.product', 'product');
-    // query.orderBy('inventoryMovement.partidaId', 'DESC');
+    query.orderBy('inventoryMovement.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
     filterHandler.applyFilters(query, filterDto);
