@@ -29,12 +29,12 @@ export class WarehouseSeederService {
 
     return await this.warehousesRepository.save([
       {
-        name: 'General',
+        name: 'Almacen General',
         id: generalWarehouseId,
         address: faker.string.alpha({ length: 10 }),
       },
       {
-        name: 'Produccion',
+        name: 'Almacen de Producción',
         id: productionWarehouseId,
         address: faker.string.alpha({ length: 10 }),
       },
