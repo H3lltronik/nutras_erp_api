@@ -20,7 +20,8 @@ export class InventoryMovementSeederService {
   ) {}
 
   async seed(config: InventoryMovementSeederConfig) {
-    const inventoryMovementsInDb = await this.InventoryMovementsRepository.find();
+    const inventoryMovementsInDb =
+      await this.InventoryMovementsRepository.find();
     if (inventoryMovementsInDb.length > 0) {
       console.log('Inventory movements were already seeded...');
       return;
@@ -49,7 +50,7 @@ export class InventoryMovementSeederService {
       const inventoryMovement = await this.InventoryMovementsRepository.save({
         type: typeString,
         quantity: faker.number.int({ max: 10, min: 1 }),
-        ot_id: faker.string.alpha({ length: 10 }),
+        ot_id: null,
         reason: faker.lorem.sentence(),
         fromId,
         toId,

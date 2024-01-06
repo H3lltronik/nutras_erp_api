@@ -2,22 +2,31 @@ import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Warehouse } from '../../warehouse/entities/warehouse.entity';
+import { WorkOrder } from '../../work_order/entities/work-order.entity';
 import { InventoryMovementLote } from './inventory_movement_lote.entity';
 import { MovementConcept } from './movement_concept.entity';
-import { WorkOrder } from '../../work_order/entities/work-order.entity';
 
 @Entity()
 export class InventoryMovement extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({type: 'timestamp', default: new Date().toISOString(), nullable: false})
+  @Generated('increment')
+  @Column()
+  partidaId: number;
+
+  @Column({
+    type: 'timestamp',
+    default: new Date().toISOString(),
+    nullable: false,
+  })
   date: string;
 
   @Column({ nullable: true })

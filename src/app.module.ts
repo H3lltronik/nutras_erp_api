@@ -16,6 +16,7 @@ import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
 import { WorkOrderModule } from './modules/work_order/work-order.module';
 import { WorkRequestModule } from './modules/work_request/work-request.module';
+import { PurchaseOrderModule } from './modules/purchase_order/purchase-order.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -44,6 +45,7 @@ const typeOrm = TypeOrmModule.forRoot({
     WorkOrderModule,
     WorkRequestModule,
     PurchaseRequisitionModule,
+    PurchaseOrderModule,
     SeederModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -52,4 +54,4 @@ const typeOrm = TypeOrmModule.forRoot({
   controllers: [HealthCheckController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

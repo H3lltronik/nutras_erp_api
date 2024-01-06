@@ -1,12 +1,15 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LoteService } from '../../lote/services/lote.service';
 import { CreateInventoryMovementDto } from '../dto/inventory_movement/create-inventory-movement.dto';
+import { GetInventoryMovementFilterDto } from '../dto/inventory_movement/get-inventory-movement.dto';
 import { UpdateInventoryMovementDto } from '../dto/inventory_movement/update-inventory-movement.dto';
 import { InventoryMovement } from '../entities/inventory_movement.entity';
-import { MovementTypeService } from './movement_type.service';
-import { LoteService } from '../../lote/services/lote.service';
+import { InventoryMovementFiltersHandler } from '../filters/inventory-movement-filters.handler';
 import { InventoryMovementLoteService } from './inventory-movement-lote.service';
+import { MovementTypeService } from './movement_type.service';
 
 // LOTE ENTRY TYPES
 const naturalLoteEntryTypeId = '6cebdab4-cc4b-4bee-b011-286c0ce6979a';
@@ -24,36 +27,41 @@ export class InventoryMovementService {
 
   async create(createInventoryMovementDto: CreateInventoryMovementDto) {
     let newInventoryMovement: any = {
-      ...createInventoryMovementDto
-    }
-    const movementType = await this.movementTypeService.findOne(newInventoryMovement.movementTypeId);
-    const inventoryMovementInstance = await this.inventoryMovementRepository.save(
-      createInventoryMovementDto,
+      ...createInventoryMovementDto,
+    };
+    const movementType = await this.movementTypeService.findOne(
+      newInventoryMovement.movementTypeId,
     );
+    const inventoryMovementInstance =
+      await this.inventoryMovementRepository.save(createInventoryMovementDto);
     newInventoryMovement.id = inventoryMovementInstance.id;
-    switch(movementType.action) {
-      case 'input': await this.createInputInventoryMovement(newInventoryMovement);
-      case 'output': await this.createOutputInventoryMovement(newInventoryMovement);
+    switch (movementType.action) {
+      case 'input':
+        await this.createInputInventoryMovement(newInventoryMovement);
+      case 'output':
+        await this.createOutputInventoryMovement(newInventoryMovement);
     }
     return inventoryMovementInstance;
   }
 
   async createInputInventoryMovement(inventoryMovement: any) {
-    if(!!inventoryMovement.batches && !!inventoryMovement.batches.length) {
+    if (!!inventoryMovement.batches && !!inventoryMovement.batches.length) {
       for (const batch of inventoryMovement.batches) {
         const newBatch = await this.loteService.create({
           ...batch,
           expirationDate: new Date(batch.expirationDate),
           loteEntryTypeId: naturalLoteEntryTypeId,
           wharehouseId: inventoryMovement.destinyWarehouseId,
+          description: "Lote de entrada"
         });
-        
-        const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
-          loteId: newBatch.id,
-          inventoryMovementId: inventoryMovement.id,
-          folio: `${batch.folio}`,
-          quantity: batch.quantity,
-        });
+
+        const newInventoryMovementLote =
+          await this.inventoryMovementLoteService.create({
+            loteId: newBatch.id,
+            inventoryMovementId: inventoryMovement.id,
+            folio: `${batch.folio}`,
+            quantity: batch.quantity,
+          });
       }
     }
     return;
@@ -63,19 +71,33 @@ export class InventoryMovementService {
     // here goes the movements from one warehouse to another
   }
 
-  findAll() {
-    return this.inventoryMovementRepository.find({
-      withDeleted: false,
-      relations: [
-        'ot',
-        'fromWarehouse',
-        'toWarehouse',
-        'movementConcept',
-        'inventoryMovementLotes',
-        'inventoryMovementLotes.lote',
-        'inventoryMovementLotes.lote.product',
-      ],
-    });
+  async findAll(filterDto: GetInventoryMovementFilterDto) {
+    const { limit, offset, withDeleted } = filterDto;
+
+    const query =
+      this.inventoryMovementRepository.createQueryBuilder('inventoryMovement');
+    const filterHandler = new InventoryMovementFiltersHandler();
+
+    query.leftJoinAndSelect('inventoryMovement.ot', 'ot');
+    query.leftJoinAndSelect('inventoryMovement.fromWarehouse', 'fromWarehouse');
+    query.leftJoinAndSelect('inventoryMovement.toWarehouse', 'toWarehouse');
+    query.leftJoinAndSelect(
+      'inventoryMovement.movementConcept',
+      'movementConcept',
+    );
+    query.leftJoinAndSelect('movementConcept.movementType', 'movementType')
+    query.leftJoinAndSelect(
+      'inventoryMovement.inventoryMovementLotes',
+      'inventoryMovementLotes',
+    );
+    query.leftJoinAndSelect('inventoryMovementLotes.lote', 'lote');
+    query.leftJoinAndSelect('lote.product', 'product');
+    query.orderBy('inventoryMovement.partidaId', 'DESC');
+    if (withDeleted === 'true') query.withDeleted();
+
+    filterHandler.applyFilters(query, filterDto);
+    const paginator = new Paginator<InventoryMovement>();
+    return await paginator.paginate(query, limit, offset);
   }
 
   async findOne(id: string) {

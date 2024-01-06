@@ -6,8 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateInventoryMovementDto } from '../dto/inventory_movement/create-inventory-movement.dto';
+import { GetInventoryMovementFilterDto } from '../dto/inventory_movement/get-inventory-movement.dto';
 import { UpdateInventoryMovementDto } from '../dto/inventory_movement/update-inventory-movement.dto';
 import { InventoryMovementService } from '../services/inventory-movement.service';
 
@@ -23,8 +25,8 @@ export class InventoryMovementController {
   }
 
   @Get()
-  findAll() {
-    return this.InventoryMovementService.findAll();
+  findAll(@Query() filterDto: GetInventoryMovementFilterDto) {
+    return this.InventoryMovementService.findAll(filterDto);
   }
 
   @Get(':id')

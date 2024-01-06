@@ -8,6 +8,7 @@ type LoteSeederConfig = {
   naturalLoteEntryTypeId: string;
   divisionLoteEntryTypeId: string;
   productIds: string[];
+  warehouseId: string;
 };
 
 @Injectable()
@@ -35,6 +36,7 @@ export class LoteSeederService {
       expirationDate: faker.date.future(),
       productId,
       loteEntryTypeId: naturalLoteEntryTypeId,
+      wharehouseId: config.warehouseId,
     });
   }
 }
