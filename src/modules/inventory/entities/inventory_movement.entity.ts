@@ -22,12 +22,8 @@ export class InventoryMovement extends TimestampsEntity {
   @Column()
   partidaId: number;
 
-  @Column({
-    type: 'timestamp',
-    default: new Date().toISOString(),
-    nullable: false,
-  })
-  date: string;
+  @Column()
+  folio: string;
 
   @Column({ nullable: true })
   ot_id: string;
