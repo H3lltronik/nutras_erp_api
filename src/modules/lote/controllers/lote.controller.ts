@@ -41,4 +41,9 @@ export class LoteController {
   remove(@Param('id') id: string) {
     return this.loteService.remove(id);
   }
+
+  @Get('of-product/:productId')
+  findByProductId(@Param('productId') productId: string, @Query() filterDto: GetLotesFilterDto) {
+    return this.loteService.findByProductId(productId, filterDto);
+  }
 }
