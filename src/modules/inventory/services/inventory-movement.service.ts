@@ -57,10 +57,12 @@ export class InventoryMovementService {
     );
     const inventoryMovementInstance = await this.inventoryMovementRepository.save(newInventoryMovement);
     newInventoryMovement.id = inventoryMovementInstance.id;
+    newInventoryMovement.folio = inventoryMovementInstance.folio;
     switch (movementType.action) {
       case 'input':
         await this.createInputInventoryMovement(newInventoryMovement);
       case 'output':
+      case 'move':
         await this.createOutputInventoryMovement(newInventoryMovement);
     }
     return inventoryMovementInstance;
@@ -68,6 +70,7 @@ export class InventoryMovementService {
 
   async createInputInventoryMovement(inventoryMovement: any) {
     if (!!inventoryMovement.products) {
+      let cont = 0;
       for(const product of inventoryMovement.products) {
         for (const batch of product.batches) {
           const newBatch = await this.loteService.create({
@@ -82,7 +85,7 @@ export class InventoryMovementService {
           const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
             loteId: newBatch.id,
             inventoryMovementId: inventoryMovement.id,
-            folio: `${batch.folio}`,
+            folio: `${inventoryMovement.folio}/${++cont}`,
             quantity: batch.quantity,
           });
         }
@@ -92,7 +95,24 @@ export class InventoryMovementService {
   }
 
   async createOutputInventoryMovement(inventoryMovement: any) {
-    // here goes the movements from one warehouse to another
+    if(!inventoryMovement.products || !inventoryMovement.products.length) return;
+    let cont = 0;
+    for (const product of inventoryMovement.products) {
+      if(!product.batches || !product.batches.length) continue;
+      for (const batch of product.batches) {
+        const lote = await this.loteService.findOne(batch.id);
+        if(!lote) continue;
+        const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
+          loteId: lote.id,
+          inventoryMovementId: inventoryMovement.id,
+          folio: `${inventoryMovement.folio}/${++cont}`,
+          quantity: batch.quantity,
+        });
+
+        lote.wharehouseId = inventoryMovement.destinyWarehouseId;
+        await this.loteService.update(lote.id, lote);
+      }
+    }
   }
 
   async findAll(filterDto: GetInventoryMovementFilterDto) {
