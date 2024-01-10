@@ -12,9 +12,18 @@ import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 import { WorkOrder } from '../../work_order/entities/work-order.entity';
 import { InventoryMovementLote } from './inventory_movement_lote.entity';
 import { MovementConcept } from './movement_concept.entity';
+import { IDraftEntity } from '@/src/common/draft-entity';
+import { PurchaseOrder } from '../../purchase_order/entities/purchase-order.entity';
 
 @Entity()
-export class InventoryMovement extends TimestampsEntity {
+export class InventoryMovement extends TimestampsEntity implements IDraftEntity {
+
+  @Column({ type: 'boolean', default: false })
+  isDraft: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  isPublished: boolean;
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -22,12 +31,15 @@ export class InventoryMovement extends TimestampsEntity {
   @Column()
   partidaId: number;
 
-  @Column({
-    type: 'timestamp',
-    default: new Date().toISOString(),
-    nullable: false,
-  })
-  date: string;
+  @Column()
+  folio: string;
+
+  @Column({ nullable: true })
+  ocId: string;
+
+  @ManyToOne(() => PurchaseOrder, (purchaseOrder) => purchaseOrder.id)
+  @JoinColumn({ name: 'ocId' })
+  oc: PurchaseOrder;
 
   @Column({ nullable: true })
   ot_id: string;

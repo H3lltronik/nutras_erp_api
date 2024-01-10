@@ -2,7 +2,7 @@ import { Paginator } from '@/src/common/utils/paginator';
 import { faker } from '@faker-js/faker';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { LoteService } from '../../lote/services/lote.service';
 import { CreateInventoryMovementDto } from '../dto/inventory_movement/create-inventory-movement.dto';
 import { GetInventoryMovementFilterDto } from '../dto/inventory_movement/get-inventory-movement.dto';
@@ -11,7 +11,8 @@ import { InventoryMovement } from '../entities/inventory_movement.entity';
 import { InventoryMovementFiltersHandler } from '../filters/inventory-movement-filters.handler';
 import { InventoryMovementLoteService } from './inventory-movement-lote.service';
 import { MovementTypeService } from './movement_type.service';
-import { InventoryMovementData } from './types';
+import * as moment from 'moment-timezone';
+
 
 // LOTE ENTRY TYPES
 const naturalLoteEntryTypeId = '6cebdab4-cc4b-4bee-b011-286c0ce6979a';
@@ -28,77 +29,92 @@ export class InventoryMovementService {
     private inventoryMovementLoteService: InventoryMovementLoteService,
   ) {}
 
+  private async getNextFolio() {
+    const now = moment();
+    const folioNumbersLength = 5;
+    const lastInventoryMovement = await this.inventoryMovementRepository.findOne(
+      {
+        where: {
+          folio: Like(`MV${now.year()}%`),
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      },
+    );
+    if(!lastInventoryMovement) return `MV${now.year()}-00001`;
+    let folioNumber = parseInt(lastInventoryMovement.folio.split('-')[1]);
+    folioNumber++;
+    return `MV${now.year()}-${folioNumber.toString().padStart(folioNumbersLength, '0')}`;
+  }
+
   async create(createInventoryMovementDto: CreateInventoryMovementDto) {
     let newInventoryMovement: any = {
       ...createInventoryMovementDto,
     };
+    newInventoryMovement.folio = await this.getNextFolio();
+    newInventoryMovement.isPublished = !newInventoryMovement.isDraft;
     const movementType = await this.movementTypeService.findOne(
       newInventoryMovement.movementTypeId,
     );
-    const inventoryMovementInstance =
-      await this.inventoryMovementRepository.save(createInventoryMovementDto);
+    const inventoryMovementInstance = await this.inventoryMovementRepository.save(newInventoryMovement);
     newInventoryMovement.id = inventoryMovementInstance.id;
+    newInventoryMovement.folio = inventoryMovementInstance.folio;
     switch (movementType.action) {
       case 'input':
         await this.createInputInventoryMovement(newInventoryMovement);
       case 'output':
+      case 'move':
         await this.createOutputInventoryMovement(newInventoryMovement);
     }
     return inventoryMovementInstance;
   }
 
   async createInputInventoryMovement(inventoryMovement: any) {
-    if (!!inventoryMovement.batches && !!inventoryMovement.batches.length) {
-      for (const batch of inventoryMovement.batches) {
-        const newBatch = await this.loteService.create({
-          ...batch,
-          expirationDate: new Date(batch.expirationDate),
-          loteEntryTypeId: naturalLoteEntryTypeId,
-          wharehouseId: inventoryMovement.destinyWarehouseId,
-          description: 'Lote de entrada',
-        });
-
-        const newInventoryMovementLote =
-          await this.inventoryMovementLoteService.create({
+    if (!!inventoryMovement.products) {
+      let cont = 0;
+      for(const product of inventoryMovement.products) {
+        for (const batch of product.batches) {
+          const newBatch = await this.loteService.create({
+            ...batch,
+            productId: product.id,
+            expirationDate: new Date(batch.expirationDate),
+            loteEntryTypeId: naturalLoteEntryTypeId,
+            wharehouseId: inventoryMovement.destinyWarehouseId,
+            description: "Lote de entrada"
+          });
+  
+          const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
             loteId: newBatch.id,
             inventoryMovementId: inventoryMovement.id,
-            folio: `${batch.folio}`,
+            folio: `${inventoryMovement.folio}/${++cont}`,
             quantity: batch.quantity,
           });
+        }
       }
     }
     return;
   }
 
-  async createOutputInventoryMovement(
-    inventoryMovement: InventoryMovementData,
-  ) {
-    const result = [];
-    for (const inventoryMovementLote of inventoryMovement.lotes) {
-      const inventoryMovementInstance =
-        await this.inventoryMovementLoteService.findOne(
-          inventoryMovementLote.id,
-        );
+  async createOutputInventoryMovement(inventoryMovement: any) {
+    if(!inventoryMovement.products || !inventoryMovement.products.length) return;
+    let cont = 0;
+    for (const product of inventoryMovement.products) {
+      if(!product.batches || !product.batches.length) continue;
+      for (const batch of product.batches) {
+        const lote = await this.loteService.findOne(batch.id);
+        if(!lote) continue;
+        const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
+          loteId: lote.id,
+          inventoryMovementId: inventoryMovement.id,
+          folio: `${inventoryMovement.folio}/${++cont}`,
+          quantity: batch.quantity,
+        });
 
-      const entity = await this.inventoryMovementLoteService.create({
-        inventoryMovementId: inventoryMovement.id,
-        folio: faker.string.alphanumeric(10),
-        quantity: inventoryMovementLote.quantity,
-        loteId: inventoryMovementInstance.loteId,
-      });
-
-      result.push(entity);
+        lote.wharehouseId = inventoryMovement.destinyWarehouseId;
+        await this.loteService.update(lote.id, lote);
+      }
     }
-
-    return result;
-
-    // const test = await this.loteService.findOne({
-    //   id: inventoryMovement.lotes[0].id,
-    //   relations: {
-    //     loteEntryType: true,
-    //   },
-    // });
-    // console.log(test);
   }
 
   async findAll(filterDto: GetInventoryMovementFilterDto) {
