@@ -9,12 +9,12 @@ export class MovementTypeSeederService {
         {
             id: 'ff95b7b2-d2ff-455c-a4d7-648280ed5ee2',
             name: 'Vale de entrada',
-            action: 'input'
+            action: 'move'
         },
         {
             id: '62dcc55d-1c72-4469-b5be-0f37cd184851',
             name: 'Vale de salida',
-            action: 'output'
+            action: 'move'
         },
         {
             id: 'd2f718c8-5626-4627-9f21-2001b2129f3d',

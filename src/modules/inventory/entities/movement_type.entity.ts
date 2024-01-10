@@ -10,5 +10,5 @@ export class MovementType extends TimestampsEntity {
   name: string;
 
   @Column({ nullable: true })
-  action: 'input' | 'output';
+  action: 'input' | 'output' | 'move';
 }

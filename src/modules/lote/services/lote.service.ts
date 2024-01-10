@@ -55,4 +55,14 @@ export class LoteService {
   remove(id: string) {
     return this.loteRepository.update(id, { deletedAt: new Date() });
   }
+
+  findByProductId(productId: string, filterDto: GetLotesFilterDto) {
+    const { limit, offset, withDeleted } = filterDto;
+    const query = this.loteRepository.createQueryBuilder('lote');
+    query.where('lote.productId = :productId', { productId });
+    if (withDeleted === 'true') query.withDeleted();
+    
+    const paginator = new Paginator<Lote>();
+    return paginator.paginate(query, limit, offset);
+  }
 }
