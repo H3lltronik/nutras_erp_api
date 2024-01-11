@@ -98,4 +98,8 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @JoinColumn()
   @ManyToOne(() => Department, (department) => department.id)
   department: Department;
+
+  @OneToMany(() => Lote, (lote) => lote.product)
+  lotes: Lote[];
+
 }
