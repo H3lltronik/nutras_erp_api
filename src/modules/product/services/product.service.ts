@@ -2,7 +2,7 @@ import { Paginator } from '@/src/common/utils/paginator';
 import { MeasureUnitService } from '@/src/modules/measure_unit/measure_unit.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/product/create-product.dto';
 import { GetProductsFilterDto } from '../dto/product/get-product.dto';
 import { UpdateProductDto } from '../dto/product/update-product.dto';
@@ -11,6 +11,10 @@ import { Product } from '../entities/product.entity';
 import { ProductionData } from '../entities/production-product-data.entity';
 import { PurchaseData } from '../entities/purchase-product-data.entity';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
+
+// WAREHOUSE
+const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
+const productionWarehouseId = '5606d5cd-e764-4478-bd2e-639cfb0a90b9';
 
 @Injectable()
 export class ProductService {
@@ -126,6 +130,37 @@ export class ProductService {
     query.leftJoinAndSelect('product.department', 'department');
     query.orderBy('product.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
+
+    filterHandler.applyFilters(query, filterDto);
+
+    const paginator = new Paginator<Product>();
+    return await paginator.paginate(query, limit, offset);
+  }
+
+  async findAllWithBatches(filterDto: GetProductsFilterDto) {
+    const { limit, offset, withDeleted } = filterDto;
+
+    const query = this.productRepository.createQueryBuilder('product');
+    const filterHandler = new ProductsFiltersHandler();
+
+    query.leftJoinAndSelect('product.unit', 'measure_units');
+    query.leftJoinAndSelect('product.kosherDetails', 'kosher_details');
+    query.leftJoinAndSelect('product.purchaseData', 'purchase_data');
+    query.leftJoinAndSelect('product.productionData', 'production_data');
+    query.leftJoinAndSelect('product.provider', 'providers');
+    query.leftJoinAndSelect('product.department', 'department');
+    query.leftJoinAndSelect('product.lotes', 'lotes');
+    query.where(
+      new Brackets(qb => {
+        qb.where(`lotes.wharehouseId = '${generalWarehouseId}'`)
+          .orWhere(`lotes.wharehouseId = '${productionWarehouseId}'`);
+      })
+    );
+    
+    query.orderBy('product.partidaId', 'DESC').orderBy('lotes.createdAt', 'DESC');
+    if (withDeleted === 'true') query.withDeleted();
+
+    // Add filter for lote relation
 
     filterHandler.applyFilters(query, filterDto);
 

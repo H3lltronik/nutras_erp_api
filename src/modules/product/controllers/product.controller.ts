@@ -31,6 +31,15 @@ export class ProductController {
     };
   }
 
+  @Get('with-batches')
+  async findAllWithBatches(@Query() filterDto: GetProductsFilterDto) {
+    const result = await this.productService.findAllWithBatches(filterDto);
+    return {
+      data: result.items,
+      pagination: result.paginationMetadata,
+    };
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
