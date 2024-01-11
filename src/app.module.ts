@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './modules/app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { DepartmentModule } from './modules/department/department.module';
 import { HealthCheckController } from './modules/health-check/health-check.controller';
@@ -10,13 +11,13 @@ import { MeasureUnitModule } from './modules/measure_unit/measure_unit.module';
 import { ProductModule } from './modules/product/product.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { ProviderModule } from './modules/provider/provider.module';
+import { PurchaseOrderModule } from './modules/purchase_order/purchase-order.module';
 import { PurchaseRequisitionModule } from './modules/purchase_requisition/purchase_requisition.module';
 import { SeederModule } from './modules/seeder/seeder.module';
 import { UsersModule } from './modules/users/users.module';
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
 import { WorkOrderModule } from './modules/work_order/work-order.module';
 import { WorkRequestModule } from './modules/work_request/work-request.module';
-import { PurchaseOrderModule } from './modules/purchase_order/purchase-order.module';
 
 const typeOrm = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -51,7 +52,7 @@ const typeOrm = TypeOrmModule.forRoot({
       isGlobal: true,
     }),
   ],
-  controllers: [HealthCheckController],
+  controllers: [HealthCheckController, AppController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
