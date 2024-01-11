@@ -31,6 +31,7 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
+    console.log(createProductDto);
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
@@ -151,13 +152,16 @@ export class ProductService {
     query.leftJoinAndSelect('product.department', 'department');
     query.leftJoinAndSelect('product.lotes', 'lotes');
     query.where(
-      new Brackets(qb => {
-        qb.where(`lotes.wharehouseId = '${generalWarehouseId}'`)
-          .orWhere(`lotes.wharehouseId = '${productionWarehouseId}'`);
-      })
+      new Brackets((qb) => {
+        qb.where(`lotes.wharehouseId = '${generalWarehouseId}'`).orWhere(
+          `lotes.wharehouseId = '${productionWarehouseId}'`,
+        );
+      }),
     );
-    
-    query.orderBy('product.partidaId', 'DESC').orderBy('lotes.createdAt', 'DESC');
+
+    query
+      .orderBy('product.partidaId', 'DESC')
+      .orderBy('lotes.createdAt', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
     // Add filter for lote relation
