@@ -1,4 +1,5 @@
 import { Paginator } from '@/src/common/utils/paginator';
+import { faker } from '@faker-js/faker';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
@@ -22,6 +23,7 @@ export class InventoryMovementService {
   constructor(
     @InjectRepository(InventoryMovement)
     private inventoryMovementRepository: Repository<InventoryMovement>,
+    // private inventoryMovementLoteRepository: Repository<InventoryMovementLote>,
     private movementTypeService: MovementTypeService,
     private loteService: LoteService,
     private inventoryMovementLoteService: InventoryMovementLoteService,
@@ -129,7 +131,7 @@ export class InventoryMovementService {
       'inventoryMovement.movementConcept',
       'movementConcept',
     );
-    query.leftJoinAndSelect('movementConcept.movementType', 'movementType')
+    query.leftJoinAndSelect('movementConcept.movementType', 'movementType');
     query.leftJoinAndSelect(
       'inventoryMovement.inventoryMovementLotes',
       'inventoryMovementLotes',

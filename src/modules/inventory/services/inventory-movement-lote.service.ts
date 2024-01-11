@@ -1,6 +1,8 @@
+import { Paginator } from '@/src/common/utils/paginator';
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { GetInventoryMovementFilterDto } from '../dto/inventory_movement/get-inventory-movement.dto';
 import { CreateInventoryMovementLoteDto } from '../dto/inventory_movement_lote/create-inventory-movement-lote.dto';
 import { UpdateInventoryMovementLoteDto } from '../dto/inventory_movement_lote/update-inventory-movement-lote.dto';
 import { InventoryMovementLote } from '../entities/inventory_movement_lote.entity';
@@ -18,11 +20,16 @@ export class InventoryMovementLoteService {
     );
   }
 
-  findAll() {
-    return this.inventoryMovementLoteRepository.find({
-      withDeleted: false,
-      relations: ['inventory_movement'],
-    });
+  async findAll(filterDto: GetInventoryMovementFilterDto) {
+    const { limit, offset } = filterDto;
+    const query =
+      this.inventoryMovementLoteRepository.createQueryBuilder('product');
+
+    query.leftJoinAndSelect('product.inventoryMovement', 'inventoryMovement');
+    query.orderBy('product.partidaId', 'DESC');
+
+    const paginator = new Paginator<InventoryMovementLote>();
+    return await paginator.paginate(query, limit, offset);
   }
 
   async findOne(id: string) {
@@ -30,7 +37,7 @@ export class InventoryMovementLoteService {
       await this.inventoryMovementLoteRepository.findOne({
         where: { id },
         withDeleted: false,
-        relations: ['inventory_movement'],
+        // relations: ['inventory_movement'],
       });
 
     if (!inventoryMovementLote) {

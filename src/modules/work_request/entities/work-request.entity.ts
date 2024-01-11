@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { WorkOrder } from '../../work_order/entities/work-order.entity';
+import { WorkRequestProduct } from './work-request-products.entity';
 
 @Entity({ name: 'work_request' })
 export class WorkRequest extends TimestampsEntity implements IDraftEntity {
@@ -33,6 +34,9 @@ export class WorkRequest extends TimestampsEntity implements IDraftEntity {
   @Column({ type: 'text', nullable: true })
   note: string;
 
+  @Column({ type: 'text', nullable: true })
+  clientName: string;
+
   @Column({ type: 'uuid', nullable: true })
   userId: string;
 
@@ -43,4 +47,11 @@ export class WorkRequest extends TimestampsEntity implements IDraftEntity {
   @JoinColumn()
   @OneToMany(() => WorkOrder, (workOrder) => workOrder.work_request)
   work_orders: WorkOrder[];
+
+  @JoinColumn()
+  @OneToMany(
+    () => WorkRequestProduct,
+    (workRequestProducts) => workRequestProducts.workRequest,
+  )
+  products: WorkRequestProduct[];
 }

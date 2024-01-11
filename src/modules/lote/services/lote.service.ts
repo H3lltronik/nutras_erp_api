@@ -1,15 +1,24 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { CreateLoteDto } from '../dto/lote/create-lote.dto';
-import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Lote } from '../entities/lote.entity';
-import { Batch, Brackets, Repository } from 'typeorm';
 import { Paginator } from '@/src/common/utils/paginator';
+import { HttpException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Brackets } from 'typeorm';
+import { CreateLoteDto } from '../dto/lote/create-lote.dto';
 import { GetLotesFilterDto } from '../dto/lote/get-lote.dto';
+import { UpdateLoteDto } from '../dto/lote/update-lote.dto';
+import { Lote } from '../entities/lote.entity';
 
 // WAREHOUSE
 const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
 const productionWarehouseId = '5606d5cd-e764-4478-bd2e-639cfb0a90b9';
+
+type FindOneParams = {
+  id: string;
+  relations?: {
+    warehouse?: boolean;
+    loteEntryType?: boolean;
+    product?: boolean;
+  };
+};
 
 @Injectable()
 export class LoteService {
@@ -33,10 +42,14 @@ export class LoteService {
     return this.loteRepository.find({ withDeleted: false });
   }
 
-  async findOne(id: string) {
+  async findOne(params: FindOneParams) {
+    const { id, relations } = params;
     const lote = await this.loteRepository.findOne({
       where: { id },
       withDeleted: false,
+      relations: Object.keys(relations).filter(
+        (key) => relations[key] === true,
+      ),
     });
 
     if (!lote) {
