@@ -111,7 +111,7 @@ export class WorkRequestService {
     const workRequest = await this.workRequestRepository.findOne({
       where: { id },
       withDeleted: false,
-      relations: ['products'],
+      relations: ['products', 'products.product'],
     });
 
     if (!workRequest) {

@@ -47,9 +47,9 @@ export class LoteService {
     const lote = await this.loteRepository.findOne({
       where: { id },
       withDeleted: false,
-      relations: Object.keys(relations).filter(
+      relations: !!relations ? Object.keys(relations).filter(
         (key) => relations[key] === true,
-      ),
+      ) : undefined,
     });
 
     if (!lote) {
