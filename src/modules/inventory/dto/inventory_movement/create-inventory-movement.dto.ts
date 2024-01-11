@@ -4,7 +4,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateInventoryMovementDto {
   reason: string;
-  
+
   @IsNotEmpty()
   ot_id: string;
 

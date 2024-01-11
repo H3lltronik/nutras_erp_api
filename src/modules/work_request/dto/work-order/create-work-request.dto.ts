@@ -19,4 +19,14 @@ export class CreateWorkRequestDto {
   @IsNotEmpty()
   @IsEntityExist(User)
   userId: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
+  clientName: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  products: {
+    id: string;
+    quantity: number;
+  }[];
 }

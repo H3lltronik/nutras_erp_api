@@ -1,3 +1,4 @@
+import { IDraftEntity } from '@/src/common/draft-entity';
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import {
   Column,
@@ -8,16 +9,17 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { PurchaseOrder } from '../../purchase_order/entities/purchase-order.entity';
 import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 import { WorkOrder } from '../../work_order/entities/work-order.entity';
 import { InventoryMovementLote } from './inventory_movement_lote.entity';
 import { MovementConcept } from './movement_concept.entity';
-import { IDraftEntity } from '@/src/common/draft-entity';
-import { PurchaseOrder } from '../../purchase_order/entities/purchase-order.entity';
 
 @Entity()
-export class InventoryMovement extends TimestampsEntity implements IDraftEntity {
-
+export class InventoryMovement
+  extends TimestampsEntity
+  implements IDraftEntity
+{
   @Column({ type: 'boolean', default: false })
   isDraft: boolean;
 
@@ -31,7 +33,7 @@ export class InventoryMovement extends TimestampsEntity implements IDraftEntity 
   @Column()
   partidaId: number;
 
-  @Column()
+  @Column({ nullable: true })
   folio: string;
 
   @Column({ nullable: true })
