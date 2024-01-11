@@ -102,7 +102,7 @@ export class InventoryMovementService {
     for (const product of inventoryMovement.products) {
       if(!product.batches || !product.batches.length) continue;
       for (const batch of product.batches) {
-        const lote = await this.loteService.findOne(batch.id);
+        const lote = await this.loteService.findOne({id: batch.id});
         if(!lote) continue;
         const newInventoryMovementLote = await this.inventoryMovementLoteService.create({
           loteId: lote.id,
@@ -149,11 +149,20 @@ export class InventoryMovementService {
   async findOne(id: string) {
     const inventory = await this.inventoryMovementRepository.findOne({
       where: { id },
+      relations: [
+        'movementConcept',
+        'movementConcept.movementType',
+        'fromWarehouse',
+        'toWarehouse',
+        'inventoryMovementLotes',
+        'inventoryMovementLotes.lote',
+        'inventoryMovementLotes.lote.product'
+      ],
       withDeleted: false,
     });
 
     if (!inventory) {
-      throw new HttpException('Measure unit not found', 404);
+      throw new HttpException('Movement not found', 404);
     }
 
     return inventory;
