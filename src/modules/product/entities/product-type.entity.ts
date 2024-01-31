@@ -21,6 +21,9 @@ export class ProductType extends TimestampsEntity {
   @Column()
   name: string;
 
+  @Column()
+  description: string;
+
   @Column({ nullable: true })
   departmentId: string;
 
