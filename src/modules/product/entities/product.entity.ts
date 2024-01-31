@@ -67,10 +67,10 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
   unit: MeasureUnit;
 
-  @Column({ nullable: false, default: false})
+  @Column({ nullable: true, default: false})
   isKosher: boolean;
 
-  @Column({ nullable: false, default: false})
+  @Column({ nullable: true, default: false})
   allergen: boolean;
 
   @JoinColumn()
