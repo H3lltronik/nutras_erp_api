@@ -21,7 +21,7 @@ export class ProductType extends TimestampsEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column({ nullable: true })
