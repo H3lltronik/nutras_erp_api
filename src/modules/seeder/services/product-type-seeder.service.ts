@@ -26,10 +26,67 @@ export class ProductTypeSeederService {
       productTypePPId,
     } = config;
 
-    return await this.productTypesRepository.save([
-      { name: 'MP', departmentId: purchasesDepartmentId },
-      { name: 'PT', departmentId: productionDepartmentId, id: productTypePTId },
-      { name: 'PP', departmentId: productionDepartmentId, id: productTypePPId },
-    ]);
+    const productTypes = [
+      {
+        name: 'MP',
+        description: '(MP) Materia prima',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'PT',
+        description: '(PT) Producto terminado',
+        departmentId: productionDepartmentId,
+        id: productTypePTId
+      },
+      {
+        name: 'PP',
+        description: '(PP) Producto parcialmente procesado',
+        departmentId: productionDepartmentId,
+        id: productTypePPId
+      },
+      {
+        name: 'ME',
+        description: '(ME) Material de empaque',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'PQ',
+        description: '(PQ) Productos químicos',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'PC',
+        description: '(PC) Productos de calidad',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'HE',
+        description: '(HE) Herramientas',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'RE',
+        description: '(RE) Refacciones',
+        departmentId: purchasesDepartmentId
+      },
+      {
+        name: 'PS',
+        description: '(PS) Productos de seguridad',
+        departmentId: purchasesDepartmentId
+      },
+    ];
+    let productTypesSaved = [];
+    for (const productType of productTypes) {
+      const productTypeEntity = await this.productTypesRepository.findOne({
+        where: { name: productType.name },
+      });
+      if (!productTypeEntity) {
+        await this.productTypesRepository.save(productType);
+      } else {
+        await this.productTypesRepository.update(productTypeEntity.id, productType);
+      }
+      productTypesSaved.push(productType);
+    }
+    return productTypesSaved;
   }
 }
