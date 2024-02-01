@@ -25,6 +25,7 @@ import { ProviderSeederService } from './provider.seeder.service';
 import { PurchaseDataSeederService } from './purchase-data.seeder.service';
 import { UserSeederService } from './user.seeder.service';
 import { WarehouseSeederService } from './warehouse.seeder.service';
+import { ProductPresentationSeederService } from './product-presentation.seeder.service';
 
 @Injectable()
 export class SeederService {
@@ -37,6 +38,7 @@ export class SeederService {
     private loteSeederService: LoteSeederService,
     private measurementUnitSeederService: MeasureUnitSeederService,
     private productTypeSeederService: ProductTypeSeederService,
+    private productPresentationSeederService: ProductPresentationSeederService,
     private productSeederService: ProductSeederService,
     private productionDataSeederService: ProductionDataSeederService,
     private profileSeederService: ProfileSeederService,
@@ -114,34 +116,37 @@ export class SeederService {
     }
     const products: Product[] = [];
 
-    for (let i = 0; i < 10; i++) {
-      const loaders2 = await Promise.allSettled([
-        this.kosherDetailsSeederService.seed(),
-        this.productionDataSeederService.seed(),
-        this.purchaseDataSeederService.seed(),
-      ]).then((results) =>
-        results.map((result) =>
-          result.status === 'fulfilled' ? result.value : [],
-        ),
-      );
-
-      const [kosherDetails, productionData, purchaseData] = loaders2 as [
-        KosherDetails,
-        ProductionData,
-        PurchaseData,
-      ];
-
-      const product = await this.productSeederService.seed({
-        kosherDetailsId: kosherDetails.id,
-        productionDataId: productionData.id,
-        purchaseDataId: purchaseData.id,
-        providerIds: providers.map((provider) => provider.id),
-        unitIds: measureUnits.map((measureUnit) => measureUnit.id),
-        productTypeIds: productTypes.map((productType) => productType.id),
-        deparmentIds: departments.map((department) => department.id),
-      });
-
-      if (product) products.push(product);
+    // execute only if is not production
+    if (process.env.NODE_ENV !== 'production' && false) {
+      for (let i = 0; i < 10; i++) {
+        const loaders2 = await Promise.allSettled([
+          this.kosherDetailsSeederService.seed(),
+          this.productionDataSeederService.seed(),
+          this.purchaseDataSeederService.seed(),
+        ]).then((results) =>
+          results.map((result) =>
+            result.status === 'fulfilled' ? result.value : [],
+          ),
+        );
+  
+        const [kosherDetails, productionData, purchaseData] = loaders2 as [
+          KosherDetails,
+          ProductionData,
+          PurchaseData,
+        ];
+  
+        const product = await this.productSeederService.seed({
+          kosherDetailsId: kosherDetails.id,
+          productionDataId: productionData.id,
+          purchaseDataId: purchaseData.id,
+          providerIds: providers.map((provider) => provider.id),
+          unitIds: measureUnits.map((measureUnit) => measureUnit.id),
+          productTypeIds: productTypes.map((productType) => productType.id),
+          deparmentIds: departments.map((department) => department.id),
+        });
+  
+        if (product) products.push(product);
+      }
     }
 
     await this.warehouseSeederService.seed({
@@ -187,6 +192,7 @@ export class SeederService {
 
     await this.movementTypeSeederService.seed();
     await this.movementConceptSeederService.seed();
+    await this.productPresentationSeederService.seed();
 
     return 'ok';
   }

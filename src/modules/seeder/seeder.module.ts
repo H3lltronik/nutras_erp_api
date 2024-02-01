@@ -38,6 +38,8 @@ import { MovementConceptSeederService } from './services/movement-concept.seeder
 import { MovementConcept } from '../inventory/entities/movement_concept.entity';
 import { MovementType } from '../inventory/entities/movement_type.entity';
 import { InventoryModule } from '../inventory/inventory.module';
+import { ProductPresentation } from '../product/entities/product-presentation.entity';
+import { ProductPresentationSeederService } from './services/product-presentation.seeder.service';
 
 const repositories = TypeOrmModule.forFeature([
   MeasureUnit,
@@ -51,6 +53,7 @@ const repositories = TypeOrmModule.forFeature([
   Provider,
   User,
   ProductType,
+  ProductPresentation,
   PurchaseData,
   KosherDetails,
   ProductionData,
@@ -70,6 +73,7 @@ const repositories = TypeOrmModule.forFeature([
     LoteSeederService,
     MeasureUnitSeederService,
     ProductTypeSeederService,
+    ProductPresentationSeederService,
     ProductSeederService,
     ProductionDataSeederService,
     ProfileSeederService,
