@@ -129,6 +129,7 @@ export class ProductService {
     query.leftJoinAndSelect('product.productionData', 'production_data');
     query.leftJoinAndSelect('product.provider', 'providers');
     query.leftJoinAndSelect('product.department', 'department');
+    query.leftJoinAndSelect('product.productType', 'productType');
     query.orderBy('product.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
@@ -182,6 +183,7 @@ export class ProductService {
         'purchaseData',
         'productionData',
         'provider',
+        'productType',
       ],
     });
 
