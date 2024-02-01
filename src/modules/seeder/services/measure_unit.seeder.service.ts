@@ -13,14 +13,33 @@ export class MeasureUnitSeederService {
 
   async seed() {
     console.log('Seeding measure units...');
-    const units: MeasureUnit[] = [];
-    for (let i = 0; i < 10; i++) {
-      const unit = this.measureUnitsRepository.create({
-        name: faker.science.unit().name,
+    const units: Partial<MeasureUnit>[] = [
+      {
+        name: 'Kg'
+      },
+      {
+        name: 'L'
+      },
+      {
+        name: 'Pieza'
+      },
+      {
+        name: 'Paquete'
+      },
+    ];
+
+    let unitsSaved = [];
+    for (const productPresentation of units) {
+      const productPresentationEntity = await this.measureUnitsRepository.findOne({
+        where: { name: productPresentation.name },
       });
-      units.push(unit);
-      await this.measureUnitsRepository.save(unit);
+      if (!productPresentationEntity) {
+        await this.measureUnitsRepository.save(productPresentation);
+      } else {
+        await this.measureUnitsRepository.update(productPresentationEntity.id, productPresentation);
+      }
+      unitsSaved.push(productPresentation);
     }
-    return units;
+    return unitsSaved;
   }
 }
