@@ -24,4 +24,10 @@ export class ProductsTypeService {
     const paginator = new Paginator<ProductType>();
     return await paginator.paginate(query, limit, offset);
   }
+
+  async findOne(id: string) {
+    return await this.productTypeRepository.findOne({
+      where: { id },
+    });
+  }
 }
