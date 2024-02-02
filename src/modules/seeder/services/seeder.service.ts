@@ -55,6 +55,9 @@ export class SeederService {
     const directionDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db4';
     const productionDepartmentId = '6cebdab4-cc4b-4bee-b011-286c0ce6979b';
     const purchasesDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db0';
+    const qualityDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db1';
+    const warehouseDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db2';
+    const salesDepartmentId = '65a427ba-d703-4f8f-b688-ccfa44d62db3';
 
     // PROFILES
     const adminProfileId = '65a427ba-d703-4f8f-b688-ccfa44d62db5';
@@ -84,6 +87,9 @@ export class SeederService {
         directionDepartmentId,
         productionDepartmentId,
         purchasesDepartmentId,
+        qualityDepartmentId,
+        warehouseDepartmentId,
+        salesDepartmentId,
       }),
       this.measurementUnitSeederService.seed(),
     ]).then((results) =>

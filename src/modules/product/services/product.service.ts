@@ -11,6 +11,7 @@ import { Product } from '../entities/product.entity';
 import { ProductionData } from '../entities/production-product-data.entity';
 import { PurchaseData } from '../entities/purchase-product-data.entity';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
+import { ProductsTypeService } from './product-type.service';
 
 // WAREHOUSE
 const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
@@ -28,16 +29,20 @@ export class ProductService {
     @InjectRepository(KosherDetails)
     private kosherDetailsRepository: Repository<KosherDetails>,
     private measureUnitService: MeasureUnitService,
+    private productTypeService: ProductsTypeService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
     console.log(createProductDto);
+
+    const productType = await this.productTypeService.findOne(createProductDto.productTypeId);
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
 
     return await this.productRepository.save({
       ...createProductDto,
+      code: !!productType ? `${productType.name}-${createProductDto.code}` : createProductDto.code,
       unit: measureUnit,
     });
   }

@@ -17,8 +17,14 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
   @Column()
   partidaId: number;
 
+  @Column({ nullable: true, length: 4, unique: true})
+  code: string;
+
   @Column({ nullable: true })
   name: string;
+
+  @Column({ nullable: true })
+  RFC: string;
 
   @Column({ nullable: true })
   businessName: string;
