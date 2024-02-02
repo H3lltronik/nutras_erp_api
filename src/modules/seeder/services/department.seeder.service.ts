@@ -7,6 +7,9 @@ type DepartmentSeederConfig = {
   directionDepartmentId: string;
   productionDepartmentId: string;
   purchasesDepartmentId: string;
+  qualityDepartmentId: string;
+  warehouseDepartmentId: string;
+  salesDepartmentId: string;
 };
 
 @Injectable()
@@ -22,12 +25,18 @@ export class DepartmentSeederService {
       directionDepartmentId,
       productionDepartmentId,
       purchasesDepartmentId,
+      qualityDepartmentId,
+      warehouseDepartmentId,
+      salesDepartmentId,
     } = config;
 
     return await this.departmentsRepository.save([
-      { name: 'Produccion', id: productionDepartmentId },
+      { name: 'Producción', id: productionDepartmentId },
       { name: 'Compras', id: purchasesDepartmentId },
-      { name: 'Direccion', id: directionDepartmentId },
+      { name: 'Dirección', id: directionDepartmentId },
+      { name: 'Calidad', id: qualityDepartmentId },
+      { name: 'Almacén', id: warehouseDepartmentId },
+      { name: 'Ventas', id: salesDepartmentId },
     ]);
   }
 }

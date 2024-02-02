@@ -116,7 +116,6 @@ export class UsersService {
 
   async remove(id: string) {
     const user = await this.userRepository.findOneBy({ id });
-    user.deletedAt = new Date();
-    return this.userRepository.save(user);
+    return await this.userRepository.remove(user);
   }
 }
