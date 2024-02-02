@@ -7,8 +7,8 @@ export class SeederController {
 
   @Get()
   async index() {
+    return await this.seederService.seed();
     if (process.env.NODE_ENV !== 'production') {
-      return await this.seederService.seed();
     }
   }
 }
