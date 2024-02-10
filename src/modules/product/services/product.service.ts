@@ -33,16 +33,22 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    console.log(createProductDto);
 
     const productType = await this.productTypeService.findOne(createProductDto.productTypeId);
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
 
+    const productCode = !!productType ? `${productType.name}-${createProductDto.code}` : createProductDto.code;
+    const productFound = await this.productRepository.findOne({
+      where: { code: productCode },
+    });
+    if(productFound) {
+      throw new HttpException('El código de producto ya existe', HttpStatus.BAD_REQUEST);
+    }
     return await this.productRepository.save({
       ...createProductDto,
-      code: !!productType ? `${productType.name}-${createProductDto.code}` : createProductDto.code,
+      code: productCode,
       unit: measureUnit,
     });
   }

@@ -41,7 +41,7 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @ManyToOne(() => ProductType, (productType) => productType.id)
   productType: ProductType;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   code: string;
 
   @Column({ nullable: true })
@@ -52,6 +52,9 @@ export class Product extends TimestampsEntity implements IDraftEntity {
 
   @Column({ nullable: true })
   providerDescription: string;
+
+  @Column({ nullable: true })
+  notes: string;
 
   @JoinColumn()
   @ManyToOne(() => Provider, (provider) => provider.id)
