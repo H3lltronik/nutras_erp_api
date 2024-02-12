@@ -1,3 +1,4 @@
+import { DatabaseExceptionFilter } from '@/src/common/filters/DatabaseExceptionFilter';
 import {
   Body,
   Controller,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateProviderDto } from '../dto/provider/create-provider.dto';
 import { GetProvidersFilterDto } from '../dto/provider/get-provider.dto';
@@ -18,6 +20,7 @@ export class ProviderController {
   constructor(private readonly providerService: ProviderService) {}
 
   @Post()
+  @UseFilters(new DatabaseExceptionFilter())
   create(@Body() createProviderDto: CreateProviderDto) {
     return this.providerService.create(createProviderDto);
   }
@@ -37,6 +40,7 @@ export class ProviderController {
   }
 
   @Patch(':id')
+  @UseFilters(new DatabaseExceptionFilter())
   update(
     @Param('id') id: string,
     @Body() updateProviderDto: UpdateProviderDto,
