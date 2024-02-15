@@ -1,3 +1,4 @@
+import { DatabaseExceptionFilter } from '@/src/common/filters/DatabaseExceptionFilter';
 import {
   Body,
   Controller,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateProductDto } from '../dto/product/create-product.dto';
 import { GetProductsFilterDto } from '../dto/product/get-product.dto';
@@ -18,6 +20,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @UseFilters(new DatabaseExceptionFilter())
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
@@ -46,6 +49,7 @@ export class ProductController {
   }
 
   @Patch(':id')
+  @UseFilters(new DatabaseExceptionFilter())
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(id, updateProductDto);
   }

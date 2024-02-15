@@ -17,7 +17,7 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
   @Column()
   partidaId: number;
 
-  @Column({ nullable: true, length: 4, unique: true})
+  @Column({ nullable: true, length: 4, unique: true })
   code: string;
 
   @Column({ nullable: true })
@@ -52,4 +52,7 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
 
   @Column({ nullable: true })
   accountNumber: string;
+
+  @Column({ nullable: true })
+  notes: string;
 }
