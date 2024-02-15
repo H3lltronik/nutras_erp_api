@@ -1,14 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { GetProductTypesFilterDto } from '../dto/productType/get-product-types.dto';
-import { ProductsTypeService } from '../services/product-type.service';
+import { PPProductsTypeService } from '../services/pp-product-type.service';
 
-@Controller('product-types')
-export class ProductTypesController {
-  constructor(private readonly productTypesService: ProductsTypeService) {}
+@Controller('pp-product-types')
+export class PPProductTypeController {
+  constructor(private readonly ppProductTypesService: PPProductsTypeService) {}
 
   @Get()
   async findAll(@Query() filterDto: GetProductTypesFilterDto) {
-    const result = await this.productTypesService.findAll(filterDto);
+    const result = await this.ppProductTypesService.findAll(filterDto);
     return {
       data: result.items,
       pagination: result.paginationMetadata,
