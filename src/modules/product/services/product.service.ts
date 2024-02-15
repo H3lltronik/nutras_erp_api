@@ -39,12 +39,8 @@ export class ProductService {
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
-
-    const productCode = !!productType
-      ? `${productType.name}-${createProductDto.code}`
-      : createProductDto.code;
     const productFound = await this.productRepository.findOne({
-      where: { code: productCode },
+      where: { code: createProductDto.code },
     });
     if (productFound) {
       throw new HttpException(
@@ -54,7 +50,6 @@ export class ProductService {
     }
     return await this.productRepository.save({
       ...createProductDto,
-      code: productCode,
       unit: measureUnit,
     });
   }
