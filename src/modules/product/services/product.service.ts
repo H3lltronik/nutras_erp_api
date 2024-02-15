@@ -33,16 +33,28 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    console.log(createProductDto);
-
-    const productType = await this.productTypeService.findOne(createProductDto.productTypeId);
+    const productType = await this.productTypeService.findOne(
+      createProductDto.productTypeId,
+    );
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
 
+    const productCode = !!productType
+      ? `${productType.name}-${createProductDto.code}`
+      : createProductDto.code;
+    const productFound = await this.productRepository.findOne({
+      where: { code: productCode },
+    });
+    if (productFound) {
+      throw new HttpException(
+        'El código de producto ya existe',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.productRepository.save({
       ...createProductDto,
-      code: !!productType ? `${productType.name}-${createProductDto.code}` : createProductDto.code,
+      code: productCode,
       unit: measureUnit,
     });
   }
@@ -71,9 +83,19 @@ export class ProductService {
         where: { id: product.purchaseData.id },
       });
 
-      await this.purchaseDataRepository.update(purchaseData.id, {
-        ...updateProductDto.purchaseData,
-      });
+      try {
+        if (Object.keys(updateProductDto.purchaseData).length > 0) {
+          await this.purchaseDataRepository.update(purchaseData.id, {
+            ...updateProductDto.purchaseData,
+          });
+        }
+      } catch (error) {
+        console.log('Error updating purchase data', error);
+        // throw new HttpException(
+        //   'Error updating purchase data',
+        //   HttpStatus.BAD_REQUEST,
+        // );
+      }
     }
     delete updateProductDto.purchaseData;
 
@@ -135,6 +157,7 @@ export class ProductService {
     query.leftJoinAndSelect('product.provider', 'providers');
     query.leftJoinAndSelect('product.department', 'department');
     query.leftJoinAndSelect('product.productType', 'productType');
+    query.leftJoinAndSelect('product.ppCategory', 'ppCategory');
     query.orderBy('product.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
@@ -189,11 +212,12 @@ export class ProductService {
         'productionData',
         'provider',
         'productType',
+        'ppCategory',
       ],
     });
 
     if (!product) {
-      throw new HttpException('Measure unit not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
 
     return product;

@@ -39,11 +39,10 @@ export class ProviderService {
   async findOne(id: string) {
     const provider = await this.providerRepository.findOne({
       where: { id },
-      withDeleted: false,
     });
 
     if (!provider) {
-      throw new HttpException('Provider unit not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Provider not found', HttpStatus.NOT_FOUND);
     }
 
     return provider;

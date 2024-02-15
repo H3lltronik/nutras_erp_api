@@ -18,6 +18,7 @@ import { KosherDetails } from './kosher-details.entity';
 import { ProductType } from './product-type.entity';
 import { ProductionData } from './production-product-data.entity';
 import { PurchaseData } from './purchase-product-data.entity';
+import { PPProductType } from './pp-product-type.entity';
 
 @Entity()
 export class Product extends TimestampsEntity implements IDraftEntity {
@@ -41,7 +42,7 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @ManyToOne(() => ProductType, (productType) => productType.id)
   productType: ProductType;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   code: string;
 
   @Column({ nullable: true })
@@ -49,6 +50,15 @@ export class Product extends TimestampsEntity implements IDraftEntity {
 
   @Column({ nullable: true })
   providerId: string;
+
+  @Column({ nullable: true })
+  providerDescription: string;
+
+  @Column({ nullable: true })
+  notes: string;
+
+  @Column({ nullable: true, type: 'text' })
+  ppNotes: string;
 
   @JoinColumn()
   @ManyToOne(() => Provider, (provider) => provider.id)
@@ -67,10 +77,13 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
   unit: MeasureUnit;
 
-  @Column({ nullable: true, default: false})
+  @Column({ nullable: true, default: false })
   isKosher: boolean;
 
-  @Column({ nullable: true, default: false})
+  @Column({ nullable: true })
+  ppCategoryId: string;
+
+  @Column({ nullable: true, default: false })
   allergen: boolean;
 
   @JoinColumn()
@@ -105,4 +118,9 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @OneToMany(() => Lote, (lote) => lote.product)
   lotes: Lote[];
 
+  @JoinColumn()
+  @ManyToOne(() => PPProductType, (ppProductType) => ppProductType.id, {
+    nullable: true,
+  })
+  ppCategory: PPProductType;
 }
