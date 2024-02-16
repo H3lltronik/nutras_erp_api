@@ -11,6 +11,7 @@ import { ProductTypeFilter } from './methods/product-product-type.filter';
 import { ProductProviderSearchFilter } from './methods/product-provider-search.filter';
 import { ProductPublishedModeFilter } from './methods/product-published-mode.filter';
 import { ProductTypesFilter } from './methods/product-types.filter';
+import { ProductPresentationsFilter } from './methods/product-presentations.filter';
 
 export class ProductsFiltersHandler extends BaseFilterHandler<Product> {
   protected filters = {
@@ -20,6 +21,7 @@ export class ProductsFiltersHandler extends BaseFilterHandler<Product> {
     kosher: new ProductKosherFilter(),
     allergen: new ProductAllergenFilter(),
     productTypes: new ProductTypesFilter(),
+    presentations: new ProductPresentationsFilter(),
     draftMode: new ProductDraftModeFilter(),
     published: new ProductPublishedModeFilter(),
     deleted: new ProductDeletedFilter(),
