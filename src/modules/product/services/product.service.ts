@@ -204,7 +204,7 @@ export class ProductService {
   async findOne(id: string) {
     const product = await this.productRepository.findOne({
       where: { id },
-      withDeleted: false,
+      withDeleted: true,
       relations: [
         'unit',
         'kosherDetails',
