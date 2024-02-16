@@ -18,10 +18,10 @@ export class ProductPresentationSeederService {
             name: 'Saco',
         },
         {
-            name: 'Bidón ',
+            name: 'Bidón',
         },
         {
-            name: 'Garrafón ',
+            name: 'Garrafón',
         },
         {
             name: 'Caja',
@@ -48,7 +48,7 @@ export class ProductPresentationSeederService {
             name: 'Paquete',
         },
         {
-            name: 'Caja ',
+            name: 'Caja',
         },
         {
             name: 'Pieza',
