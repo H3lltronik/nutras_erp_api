@@ -12,6 +12,7 @@ import { ProductionData } from '../entities/production-product-data.entity';
 import { PurchaseData } from '../entities/purchase-product-data.entity';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
 import { ProductsTypeService } from './product-type.service';
+import { ProductTypeCategoryService } from './product-type-category.service';
 
 // WAREHOUSE
 const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
@@ -30,17 +31,22 @@ export class ProductService {
     private kosherDetailsRepository: Repository<KosherDetails>,
     private measureUnitService: MeasureUnitService,
     private productTypeService: ProductsTypeService,
+    private prouctTypeCategoryService: ProductTypeCategoryService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
     const productType = await this.productTypeService.findOne(
       createProductDto.productTypeId,
     );
+    const productTypeCategory = await this.prouctTypeCategoryService.findOne(
+      createProductDto.productTypeCategoryId,
+    );
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
+    let completeCode = `${productType.name}-${createProductDto.code}${productTypeCategory?.suffix ? `-${productTypeCategory.suffix}` : ''}`;
     const productFound = await this.productRepository.findOne({
-      where: { code: createProductDto.code },
+      where: { completeCode },
     });
     if (productFound) {
       throw new HttpException(
@@ -50,6 +56,7 @@ export class ProductService {
     }
     return await this.productRepository.save({
       ...createProductDto,
+      completeCode,
       unit: measureUnit,
     });
   }
@@ -152,7 +159,7 @@ export class ProductService {
     query.leftJoinAndSelect('product.provider', 'providers');
     query.leftJoinAndSelect('product.department', 'department');
     query.leftJoinAndSelect('product.productType', 'productType');
-    query.leftJoinAndSelect('product.ppCategory', 'ppCategory');
+    query.leftJoinAndSelect('product.productTypeCategory', 'productTypeCategory');
     query.orderBy('product.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
