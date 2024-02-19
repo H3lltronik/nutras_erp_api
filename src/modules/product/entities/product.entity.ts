@@ -42,8 +42,21 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @ManyToOne(() => ProductType, (productType) => productType.id)
   productType: ProductType;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ nullable: true })
+  productTypeCategoryId: string;
+
+  @JoinColumn()
+  @ManyToOne(
+    () => ProductTypeCategory,
+    (productTypeCategory) => productTypeCategory.id,
+  )
+  productTypeCategory: ProductTypeCategory;
+
+  @Column({ nullable: true })
   code: string;
+
+  @Column({ nullable: true })
+  completeCode: string;
 
   @Column({ nullable: true })
   commonName: string;
@@ -80,9 +93,6 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @Column({ nullable: true, default: false })
   isKosher: boolean;
 
-  @Column({ nullable: true })
-  ppCategoryId: string;
-
   @Column({ nullable: true, default: false })
   allergen: boolean;
 
@@ -117,13 +127,4 @@ export class Product extends TimestampsEntity implements IDraftEntity {
 
   @OneToMany(() => Lote, (lote) => lote.product)
   lotes: Lote[];
-
-  @Column({ nullable: true })
-  productTypeCategoryId: string;
-
-  @JoinColumn()
-  @ManyToOne(() => ProductTypeCategory, (productTypeCategory) => productTypeCategory.id, {
-    nullable: true,
-  })
-  ppCategory: ProductTypeCategory;
 }
