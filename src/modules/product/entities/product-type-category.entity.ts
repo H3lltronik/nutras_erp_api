@@ -27,6 +27,9 @@ export class ProductTypeCategory extends TimestampsEntity {
   mask: string;
 
   @Column()
+  prefix: string;
+
+  @Column()
   suffix: string;
 
   @Column()
@@ -37,6 +40,6 @@ export class ProductTypeCategory extends TimestampsEntity {
   productType: ProductType;
 
   @JoinColumn()
-  @OneToMany(() => Product, (product) => product.ppCategory)
+  @OneToMany(() => Product, (product) => product.productTypeCategory)
   products: Product[];
 }

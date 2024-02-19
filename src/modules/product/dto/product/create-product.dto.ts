@@ -33,6 +33,10 @@ export class CreateProductDto {
 
   @ValidateIf((o) => !o.isDraft)
   @IsNotEmpty()
+  productTypeCategoryId: string;
+
+  @ValidateIf((o) => !o.isDraft)
+  @IsNotEmpty()
   commonName: string;
 
   @ValidateIf(
