@@ -18,7 +18,7 @@ import { KosherDetails } from './kosher-details.entity';
 import { ProductType } from './product-type.entity';
 import { ProductionData } from './production-product-data.entity';
 import { PurchaseData } from './purchase-product-data.entity';
-import { PPProductType } from './pp-product-type.entity';
+import { ProductTypeCategory } from './product-type-category.entity';
 
 @Entity()
 export class Product extends TimestampsEntity implements IDraftEntity {
@@ -118,9 +118,12 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @OneToMany(() => Lote, (lote) => lote.product)
   lotes: Lote[];
 
+  @Column({ nullable: true })
+  productTypeCategoryId: string;
+
   @JoinColumn()
-  @ManyToOne(() => PPProductType, (ppProductType) => ppProductType.id, {
+  @ManyToOne(() => ProductTypeCategory, (productTypeCategory) => productTypeCategory.id, {
     nullable: true,
   })
-  ppCategory: PPProductType;
+  ppCategory: ProductTypeCategory;
 }

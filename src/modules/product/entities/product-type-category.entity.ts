@@ -4,13 +4,15 @@ import {
   Entity,
   Generated,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
+import { ProductType } from './product-type.entity';
 
 @Entity()
-export class PPProductType extends TimestampsEntity {
+export class ProductTypeCategory extends TimestampsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,13 +21,20 @@ export class PPProductType extends TimestampsEntity {
   partidaId: number;
 
   @Column()
+  name: string;
+
+  @Column()
   mask: string;
 
   @Column()
-  prefix: string;
+  suffix: string;
 
   @Column()
-  suffix: string;
+  productTypeId: string;
+
+  @JoinColumn()
+  @ManyToOne(() => ProductType, (productType) => productType.id)
+  productType: ProductType;
 
   @JoinColumn()
   @OneToMany(() => Product, (product) => product.ppCategory)
