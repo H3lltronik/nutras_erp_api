@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductType } from '../../product/entities/product-type.entity';
+import { ProductTypeCategoryService } from '../../product/services/product-type-category.service';
 
 type ProductTypeSeederConfig = {
   productionDepartmentId: string;
@@ -15,6 +16,7 @@ export class ProductTypeSeederService {
   constructor(
     @InjectRepository(ProductType)
     private productTypesRepository: Repository<ProductType>,
+    private productTypeCategoryService: ProductTypeCategoryService,
   ) {}
 
   async seed(config: ProductTypeSeederConfig) {
@@ -30,7 +32,7 @@ export class ProductTypeSeederService {
       {
         name: 'MP',
         description: '(MP) Materia prima',
-        departmentId: purchasesDepartmentId
+        departmentId: purchasesDepartmentId,
       },
       {
         name: 'PT',
@@ -42,7 +44,45 @@ export class ProductTypeSeederService {
         name: 'PP',
         description: '(PP) Producto parcialmente procesado',
         departmentId: productionDepartmentId,
-        id: productTypePPId
+        id: productTypePPId,
+        productTypeCategories: [
+          {
+            name: '(PP-###) Núcleos',
+            mask: 'PP-###-',
+            suffix: '',
+            productTypeId: productTypePPId,
+          },
+          {
+            name: '(PP-###-R) Núcleo recuperado',
+            mask: 'PP-###-R',
+            suffix: 'R',
+            productTypeId: productTypePPId,
+          },
+          {
+            name: '(PP-###-N) Núcleo NO conforme',
+            mask: 'PP-###-N',
+            suffix: 'N',
+            productTypeId: productTypePPId,
+          },
+          {
+            name: '(PP-###-A) Núcleo transformado',
+            mask: 'PP-###-A',
+            suffix: 'A',
+            productTypeId: productTypePPId,
+          },
+          {
+            name: '(PP-###-AR) Núcleo transformado recuperado',
+            mask: 'PP-###-AR',
+            suffix: 'AR',
+            productTypeId: productTypePPId,
+          },
+          {
+            name: '(PP-###-AN) Núcleo transformado NO conforme',
+            mask: 'PP-###-AN',
+            suffix: 'AN',
+            productTypeId: productTypePPId,
+          },
+        ],
       },
       {
         name: 'ME',
@@ -77,13 +117,24 @@ export class ProductTypeSeederService {
     ];
     let productTypesSaved = [];
     for (const productType of productTypes) {
-      const productTypeEntity = await this.productTypesRepository.findOne({
+      const categories = productType.productTypeCategories;
+      delete productType.productTypeCategories;
+      let productTypeEntity = await this.productTypesRepository.findOne({
         where: { name: productType.name },
       });
       if (!productTypeEntity) {
-        await this.productTypesRepository.save(productType);
+        productTypeEntity = await this.productTypesRepository.save(productType);
       } else {
         await this.productTypesRepository.update(productTypeEntity.id, productType);
+      }
+      if (categories) {
+        for (const category of categories) {
+          const productTypeCategory = {
+            ...category,
+            productTypeId: productTypeEntity.id,
+          };
+          await this.productTypeCategoryService.autoUpdate(productTypeCategory);
+        }
       }
       productTypesSaved.push(productType);
     }

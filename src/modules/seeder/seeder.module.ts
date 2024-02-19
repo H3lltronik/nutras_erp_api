@@ -40,6 +40,8 @@ import { MovementType } from '../inventory/entities/movement_type.entity';
 import { InventoryModule } from '../inventory/inventory.module';
 import { ProductPresentation } from '../product/entities/product-presentation.entity';
 import { ProductPresentationSeederService } from './services/product-presentation.seeder.service';
+import { ProductTypeCategory } from '../product/entities/product-type-category.entity';
+import { ProductTypeCategoryService } from '../product/services/product-type-category.service';
 
 const repositories = TypeOrmModule.forFeature([
   MeasureUnit,
@@ -53,6 +55,7 @@ const repositories = TypeOrmModule.forFeature([
   Provider,
   User,
   ProductType,
+  ProductTypeCategory,
   ProductPresentation,
   PurchaseData,
   KosherDetails,
@@ -73,6 +76,7 @@ const repositories = TypeOrmModule.forFeature([
     LoteSeederService,
     MeasureUnitSeederService,
     ProductTypeSeederService,
+    ProductTypeCategoryService,
     ProductPresentationSeederService,
     ProductSeederService,
     ProductionDataSeederService,

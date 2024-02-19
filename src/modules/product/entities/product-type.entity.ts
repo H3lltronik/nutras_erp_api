@@ -5,9 +5,11 @@ import {
   Generated,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Department } from '../../department/entities/department.entity';
+import { ProductTypeCategory } from './product-type-category.entity';
 
 @Entity()
 export class ProductType extends TimestampsEntity {
@@ -30,4 +32,8 @@ export class ProductType extends TimestampsEntity {
   @JoinColumn()
   @ManyToOne(() => Department, (department) => department.id)
   department: Department;
+
+  @JoinColumn()
+  @OneToMany(() => ProductTypeCategory, (productTypeCategory) => productTypeCategory.productType)
+  productTypeCategories: ProductTypeCategory[];
 }
