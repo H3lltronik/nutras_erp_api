@@ -40,6 +40,6 @@ export class ProductTypeCategory extends TimestampsEntity {
   productType: ProductType;
 
   @JoinColumn()
-  @OneToMany(() => Product, (product) => product.productTypeCategory)
+  @OneToMany(() => Product, (product) => product.productTypeCategoryId)
   products: Product[];
 }
