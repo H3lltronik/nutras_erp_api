@@ -17,7 +17,6 @@ export class ProductionDataSeederService {
       description: faker.commerce.productDescription(),
       packaging: faker.commerce.productMaterial(),
       mold: faker.commerce.productAdjective(),
-      ptPresentation: faker.commerce.productName(),
     });
     await this.productionDataRepository.save(productionData);
     return productionData;

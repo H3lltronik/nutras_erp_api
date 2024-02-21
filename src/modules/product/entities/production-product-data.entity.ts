@@ -1,10 +1,8 @@
-import { IDraftEntity } from '@/src/common/draft-entity';
 import { TimestampsEntity } from '@/src/common/timestamps-entity';
 import {
   Column,
   Entity,
   Generated,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,7 +31,4 @@ export class ProductionData extends TimestampsEntity {
 
   @Column({ nullable: true })
   mold: string;
-
-  @Column({ nullable: true })
-  ptPresentation: string;
 }

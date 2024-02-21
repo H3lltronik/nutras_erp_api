@@ -9,7 +9,4 @@ export class CreateProductionDataDto {
 
   @IsNotEmpty()
   mold: string;
-
-  @IsNotEmpty()
-  ptPresentation: string;
 }

@@ -31,7 +31,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   productTypeId: string;
 
-  @ValidateIf((o) => !o.isDraft)
+  @ValidateIf(
+    (o) => !o.isDraft && o.productTypeId === process.env.PRODUCT_TYPE_PP_ID,
+  )
   @IsNotEmpty()
   productTypeCategoryId: string;
 
