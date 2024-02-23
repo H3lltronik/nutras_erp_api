@@ -34,17 +34,14 @@ export class ProductService {
     private prouctTypeCategoryService: ProductTypeCategoryService,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  private async verifyProductCode(product: CreateProductDto | UpdateProductDto) {
     const productType = await this.productTypeService.findOne(
-      createProductDto.productTypeId,
+      product.productTypeId,
     );
     const productTypeCategory = await this.prouctTypeCategoryService.findOne(
-      createProductDto.productTypeCategoryId,
+      product.productTypeCategoryId,
     );
-    const measureUnit = await this.measureUnitService.findOne(
-      createProductDto.unitId,
-    );
-    let completeCode = `${productType.name}-${createProductDto.code}${productTypeCategory?.suffix ? `-${productTypeCategory.suffix}` : ''}`;
+    let completeCode = `${productType.name}-${product.code}${productTypeCategory?.suffix ?? ''}`;
     const productFound = await this.productRepository.findOne({
       where: { completeCode },
     });
@@ -54,11 +51,25 @@ export class ProductService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.productRepository.save({
-      ...createProductDto,
-      completeCode,
-      unit: measureUnit,
-    });
+    return completeCode;
+  }
+
+  async create(createProductDto: CreateProductDto) {
+    const measureUnit = await this.measureUnitService.findOne(
+      createProductDto.unitId,
+    );
+    
+    try {
+      const completeCode = await this.verifyProductCode(createProductDto);
+      return await this.productRepository.save({
+        ...createProductDto,
+        completeCode,
+        unit: measureUnit,
+      });
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
