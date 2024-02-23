@@ -11,8 +11,8 @@ import { Product } from '../entities/product.entity';
 import { ProductionData } from '../entities/production-product-data.entity';
 import { PurchaseData } from '../entities/purchase-product-data.entity';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
-import { ProductsTypeService } from './product-type.service';
 import { ProductTypeCategoryService } from './product-type-category.service';
+import { ProductsTypeService } from './product-type.service';
 
 // WAREHOUSE
 const generalWarehouseId = '621b95b5-6320-4e62-8b9d-4bc068867ee6';
@@ -44,7 +44,9 @@ export class ProductService {
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
-    let completeCode = `${productType.name}-${createProductDto.code}${productTypeCategory?.suffix ? `-${productTypeCategory.suffix}` : ''}`;
+    let completeCode = `${productType.name}-${createProductDto.code}${
+      productTypeCategory?.suffix ? `-${productTypeCategory.suffix}` : ''
+    }`;
     const productFound = await this.productRepository.findOne({
       where: { completeCode },
     });
@@ -159,7 +161,10 @@ export class ProductService {
     query.leftJoinAndSelect('product.provider', 'providers');
     query.leftJoinAndSelect('product.department', 'department');
     query.leftJoinAndSelect('product.productType', 'productType');
-    query.leftJoinAndSelect('product.productTypeCategory', 'productTypeCategory');
+    query.leftJoinAndSelect(
+      'product.productTypeCategory',
+      'productTypeCategory',
+    );
     query.orderBy('product.partidaId', 'DESC');
     if (withDeleted === 'true') query.withDeleted();
 
@@ -214,7 +219,6 @@ export class ProductService {
         'productionData',
         'provider',
         'productType',
-        'ppCategory',
       ],
     });
 
