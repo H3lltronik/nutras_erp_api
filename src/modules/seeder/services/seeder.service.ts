@@ -82,7 +82,7 @@ export class SeederService {
       this.profileSeederService.seed({
         adminProfileId,
       }),
-      this.providerSeederService.seed(),
+      // this.providerSeederService.seed(),
       this.departmentSeederService.seed({
         directionDepartmentId,
         productionDepartmentId,
