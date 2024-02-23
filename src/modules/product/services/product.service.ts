@@ -167,7 +167,7 @@ export class ProductService {
     query.leftJoinAndSelect('product.kosherDetails', 'kosher_details');
     query.leftJoinAndSelect('product.purchaseData', 'purchase_data');
     query.leftJoinAndSelect('product.productionData', 'production_data');
-    query.leftJoinAndSelect('product.provider', 'providers');
+    query.leftJoinAndSelect('product.provider', 'provider');
     query.leftJoinAndSelect('product.department', 'department');
     query.leftJoinAndSelect('product.productType', 'productType');
     query.leftJoinAndSelect(

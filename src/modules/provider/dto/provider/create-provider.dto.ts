@@ -10,42 +10,42 @@ export class CreateProviderDto {
   isPublished?: boolean;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   businessName: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   service: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   lada: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   phone: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   email: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   paymentEmail: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   bank: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   clabeAccount: string;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
+  @IsOptional()
   accountNumber: string;
 }

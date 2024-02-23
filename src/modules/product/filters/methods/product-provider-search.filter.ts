@@ -7,7 +7,7 @@ export class ProductProviderSearchFilter implements Filter<Product> {
     query: SelectQueryBuilder<Product>,
     value: string,
   ): SelectQueryBuilder<Product> {
-    return query.andWhere('LOWER(product.provider) LIKE LOWER(:search)', {
+    return query.andWhere('LOWER(provider.name) LIKE LOWER(:search)', {
       search: `%${value}%`,
     });
   }
