@@ -34,7 +34,7 @@ export class CreateProductDto {
   @ValidateIf(
     (o) => !o.isDraft && o.productTypeId === process.env.PRODUCT_TYPE_PP_ID,
   )
-  @IsNotEmpty()
+  @IsOptional()
   productTypeCategoryId: string;
 
   @ValidateIf((o) => !o.isDraft)
@@ -58,6 +58,7 @@ export class CreateProductDto {
   isKosher: boolean;
 
   @ValidateIf((o) => !o.isDraft)
+  @IsOptional()
   presentation: string;
 
   @ValidateIf(
