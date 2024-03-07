@@ -58,7 +58,6 @@ export class CreateProductDto {
   isKosher: boolean;
 
   @ValidateIf((o) => !o.isDraft)
-  @IsNotEmpty()
   presentation: string;
 
   @ValidateIf(
