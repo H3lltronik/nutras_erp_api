@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
+import { ProductService } from '../../product/services/product.service';
 
 type ProductSeederConfig = {
   kosherDetailsId: string;
@@ -19,6 +20,7 @@ export class ProductSeederService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    private productService: ProductService,
   ) {}
 
   async seed(config: ProductSeederConfig) {
@@ -63,5 +65,19 @@ export class ProductSeederService {
     const product = this.productsRepository.create(data);
     await this.productsRepository.save(product);
     return product;
+  }
+
+  public async fix() {
+    const productsToFix = await this.productsRepository.find({
+      where: [
+        { completeCode: null },
+        { completeCode: Like('%-%') }
+      ]
+    });
+
+    for (const product of productsToFix) {
+      const completeCode = await this.productService.verifyProductCode(product);
+      await this.productsRepository.update(product.id, { completeCode });
+    }
   }
 }
