@@ -34,14 +34,14 @@ export class ProductService {
     private prouctTypeCategoryService: ProductTypeCategoryService,
   ) {}
 
-  private async verifyProductCode(product: CreateProductDto | UpdateProductDto) {
+  public async verifyProductCode(product: CreateProductDto | UpdateProductDto | Product) {
     const productType = await this.productTypeService.findOne(
       product.productTypeId,
     );
     const productTypeCategory = await this.prouctTypeCategoryService.findOne(
       product.productTypeCategoryId,
     );
-    let completeCode = `${productType.name}-${product.code}${productTypeCategory?.suffix ?? ''}`;
+    let completeCode = `${productType.name}${product.code}${productTypeCategory?.suffix ?? ''}`;
     const productFound = await this.productRepository.findOne({
       where: { completeCode },
     });
