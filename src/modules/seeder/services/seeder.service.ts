@@ -200,6 +200,10 @@ export class SeederService {
     await this.movementConceptSeederService.seed();
     await this.productPresentationSeederService.seed();
 
+    // Fixes of data in database
+    console.log('Fixing products...');
+    this.productSeederService.fix();
+
     return 'ok';
   }
 }
