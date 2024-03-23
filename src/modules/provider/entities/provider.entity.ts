@@ -52,7 +52,10 @@ export class Provider extends TimestampsEntity implements IDraftEntity {
 
   @Column({ nullable: true })
   accountNumber: string;
-
+  
   @Column({ nullable: true })
   notes: string;
+
+  @Column({ nullable: false, default: false})
+  hidden: boolean;
 }
