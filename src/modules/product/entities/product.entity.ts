@@ -83,6 +83,9 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @Column({ nullable: true })
   presentation: string;
 
+  @Column({ nullable: true, default: false })
+  variableQuantityPerUnit: boolean;
+
   @Column({ nullable: true })
   quantityPerUnit: string;
 
