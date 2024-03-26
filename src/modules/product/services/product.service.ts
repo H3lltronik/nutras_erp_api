@@ -10,6 +10,7 @@ import { KosherDetails } from '../entities/kosher-details.entity';
 import { Product } from '../entities/product.entity';
 import { ProductionData } from '../entities/production-product-data.entity';
 import { PurchaseData } from '../entities/purchase-product-data.entity';
+import { ProductListExporter } from '../export/product-list.exporter';
 import { ProductsFiltersHandler } from '../filters/products-filters.handler';
 import { ProductTypeCategoryService } from './product-type-category.service';
 import { ProductsTypeService } from './product-type.service';
@@ -34,14 +35,18 @@ export class ProductService {
     private prouctTypeCategoryService: ProductTypeCategoryService,
   ) {}
 
-  public async verifyProductCode(product: CreateProductDto | UpdateProductDto | Product) {
+  public async verifyProductCode(
+    product: CreateProductDto | UpdateProductDto | Product,
+  ) {
     const productType = await this.productTypeService.findOne(
       product.productTypeId,
     );
     const productTypeCategory = await this.prouctTypeCategoryService.findOne(
       product.productTypeCategoryId,
     );
-    let completeCode = `${productType.name}${product.code}${productTypeCategory?.suffix ?? ''}`;
+    let completeCode = `${productType.name}${product.code}${
+      productTypeCategory?.suffix ?? ''
+    }`;
     const productFound = await this.productRepository.findOne({
       where: { completeCode },
     });
@@ -58,7 +63,7 @@ export class ProductService {
     const measureUnit = await this.measureUnitService.findOne(
       createProductDto.unitId,
     );
-    
+
     try {
       const completeCode = await this.verifyProductCode(createProductDto);
       return await this.productRepository.save({
@@ -69,7 +74,6 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
-
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
@@ -157,27 +161,31 @@ export class ProductService {
     });
   }
 
-  async findAll(filterDto: GetProductsFilterDto) {
-    const { limit, offset, withDeleted } = filterDto;
-
-    const query = this.productRepository.createQueryBuilder('product');
+  private async findAllQuery(filterDto: GetProductsFilterDto) {
+    const query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.unit', 'measure_units')
+      .leftJoinAndSelect('product.kosherDetails', 'kosher_details')
+      .leftJoinAndSelect('product.purchaseData', 'purchase_data')
+      .leftJoinAndSelect('product.productionData', 'production_data')
+      .leftJoinAndSelect('product.provider', 'provider')
+      .leftJoinAndSelect('product.department', 'department')
+      .leftJoinAndSelect('product.productType', 'productType')
+      .leftJoinAndSelect('product.productTypeCategory', 'productTypeCategory')
+      .orderBy('product.partidaId', 'DESC');
     const filterHandler = new ProductsFiltersHandler();
 
-    query.leftJoinAndSelect('product.unit', 'measure_units');
-    query.leftJoinAndSelect('product.kosherDetails', 'kosher_details');
-    query.leftJoinAndSelect('product.purchaseData', 'purchase_data');
-    query.leftJoinAndSelect('product.productionData', 'production_data');
-    query.leftJoinAndSelect('product.provider', 'provider');
-    query.leftJoinAndSelect('product.department', 'department');
-    query.leftJoinAndSelect('product.productType', 'productType');
-    query.leftJoinAndSelect(
-      'product.productTypeCategory',
-      'productTypeCategory',
-    );
-    query.orderBy('product.partidaId', 'DESC');
-    if (withDeleted === 'true') query.withDeleted();
+    if (filterDto.withDeleted === 'true') query.withDeleted();
 
     filterHandler.applyFilters(query, filterDto);
+
+    return query;
+  }
+
+  async findAll(filterDto: GetProductsFilterDto) {
+    const { limit, offset } = filterDto;
+
+    const query = await this.findAllQuery(filterDto);
 
     const paginator = new Paginator<Product>();
     return await paginator.paginate(query, limit, offset);
@@ -246,5 +254,15 @@ export class ProductService {
     await this.productRepository.update(id, { deletedAt: new Date() });
 
     return product;
+  }
+
+  async exportToExcel(filterDto: GetProductsFilterDto) {
+    filterDto.limit = null;
+    filterDto.offset = null;
+
+    const query = await this.findAllQuery(filterDto);
+
+    const QueryExporter = new ProductListExporter(query);
+    return QueryExporter.parseExcel();
   }
 }

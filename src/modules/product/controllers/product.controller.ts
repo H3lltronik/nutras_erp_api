@@ -8,8 +8,10 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UseFilters,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { CreateProductDto } from '../dto/product/create-product.dto';
 import { GetProductsFilterDto } from '../dto/product/get-product.dto';
 import { UpdateProductDto } from '../dto/product/update-product.dto';
@@ -18,6 +20,29 @@ import { ProductService } from '../services/product.service';
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @Get('export')
+  async downloadExcel(
+    @Res() res: Response,
+    @Query() filterDto: GetProductsFilterDto,
+  ) {
+    try {
+      const buffer = await this.productService.exportToExcel(filterDto);
+      const filename = 'export.xlsx';
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`,
+      );
+      res.end(buffer);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error generating Excel file');
+    }
+  }
 
   @Post()
   @UseFilters(new DatabaseExceptionFilter())

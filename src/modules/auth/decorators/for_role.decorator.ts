@@ -11,7 +11,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from '../guards/jwt.auth-guard';
 
 export const ROLES_KEY = 'roles';
-export const ForRole = (...roles: string[]) =>
+export const q = (...roles: string[]) =>
   applyDecorators(
     SetMetadata(ROLES_KEY, roles),
     UseGuards(JwtAuthGuard, RolesGuard),
