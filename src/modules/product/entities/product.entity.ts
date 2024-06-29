@@ -70,6 +70,15 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @Column({ nullable: true })
   notes: string;
 
+  @Column({ nullable: true })
+  coil: string;
+
+  @Column({ nullable: true })
+  client: string;
+
+  @Column({ nullable: true })
+  isActive: boolean;
+
   @Column({ nullable: true, type: 'text' })
   ppNotes: string;
 
@@ -79,6 +88,12 @@ export class Product extends TimestampsEntity implements IDraftEntity {
 
   @Column({ type: 'uuid', nullable: true })
   unitId: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  primaryUnitId: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  secondaryUnitId: string;
 
   @Column({ nullable: true })
   presentation: string;
