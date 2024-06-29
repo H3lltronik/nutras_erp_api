@@ -30,6 +30,9 @@ export class ProductionData extends TimestampsEntity {
   packaging: string;
 
   @Column({ nullable: true })
+  packagingPrimary: string;
+
+  @Column({ nullable: true })
   packagingSecondary: string;
 
   @Column({ nullable: true })
