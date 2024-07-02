@@ -104,9 +104,23 @@ export class Product extends TimestampsEntity implements IDraftEntity {
   @Column({ nullable: true })
   quantityPerUnit: string;
 
+  @Column({ nullable: true })
+  quantityPerUnitPrimary: string;
+
+  @Column({ nullable: true })
+  quantityPerUnitSecondary: string;
+
   @JoinColumn()
   @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
   unit: MeasureUnit;
+
+  @JoinColumn()
+  @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
+  unitPrimary: MeasureUnit;
+
+  @JoinColumn()
+  @ManyToOne(() => MeasureUnit, (measureUnit) => measureUnit.id)
+  unitSecondary: MeasureUnit;
 
   @Column({ nullable: true, default: false })
   isKosher: boolean;
